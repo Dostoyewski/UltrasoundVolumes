@@ -16,16 +16,7 @@ namespace UnityVolumeRendering
         private void OnGUI()
         {
             GUILayout.BeginVertical();
-
-            // Show dataset import buttons
-            // if(GUILayout.Button("Import RAW dataset"))
-            // {
-            //     RuntimeFileBrowser.ShowOpenFileDialog(OnOpenRAWDatasetResult, "DataFiles");
-            // }
-            // if (GUILayout.Button("Import DICOM dataset"))
-            // {
-            //     RuntimeFileBrowser.ShowOpenDirectoryDialog(OnOpenDICOMDatasetResult);
-            // }
+            
 			if (GUILayout.Button("Import Radial sequence"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRadialSequenceResult);
