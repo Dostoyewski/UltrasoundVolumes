@@ -29,12 +29,14 @@ namespace UnityVolumeRendering
             if (GUILayout.Button("Despawn dataset") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
             {
                 this.DespawnAllDatasets();
+                this.DespawnAllCrossPlanes();
+                this.DespawnBoxes();
             }
 
-            if (GUILayout.Button("Cross-section") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
+            if (GUILayout.Button("Cutout") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
-                VolumeObjectFactory.SpawnCrossSectionPlane(objects);
+                VolumeObjectFactory.SpawnCutoutBox(objects);
             }
 
             // Show button for opening the dataset editor (for changing the visualisation)
@@ -149,11 +151,25 @@ namespace UnityVolumeRendering
             {
                 GameObject.Destroy(volobj.gameObject);
             }
+        }
+
+        private void DespawnAllCrossPlanes()
+        {
             CrossSectionPlane[] cobjs = GameObject.FindObjectsOfType<CrossSectionPlane>();
             foreach(CrossSectionPlane cobj in cobjs)
             {
                 GameObject.Destroy(cobj.gameObject);
             }
         }
+        
+        private void DespawnBoxes()
+        {
+            CrossSectionPlane[] cobjs = GameObject.FindObjectsOfType<CutoutBox>();
+            foreach(CrossSectionPlane cobj in cobjs)
+            {
+                GameObject.Destroy(cobj.gameObject);
+            }
+        }
+
     }
 }
