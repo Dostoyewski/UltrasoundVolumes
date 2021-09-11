@@ -164,8 +164,8 @@ namespace UnityVolumeRendering
         
         private void DespawnBoxes()
         {
-            CrossSectionPlane[] cobjs = GameObject.FindObjectsOfType<CutoutBox>();
-            foreach(CrossSectionPlane cobj in cobjs)
+            CutoutBox[] cobjs = GameObject.FindObjectsOfType<CutoutBox>();
+            foreach(CutoutBox cobj in cobjs)
             {
                 GameObject.Destroy(cobj.gameObject);
             }

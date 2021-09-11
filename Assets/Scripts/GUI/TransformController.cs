@@ -17,6 +17,10 @@ namespace UnityVolumeRendering
         [SerializeField, Range(1f, 15f)] protected float zoomMin = 5f, zoomMax = 15f;
 
         [SerializeField, Range(1f, 10f)] protected float rotateSpeed = 7.5f, rotateDelta = 5f;
+        private float scaleX = 1f;
+        private float scaleY = 1f;
+        private float scaleZ = 1f;
+        private float scaleStep = 0.001f;
 
         protected Camera cam;
         protected Vector3 targetCamPosition;
@@ -35,6 +39,46 @@ namespace UnityVolumeRendering
             this.targetObject = GameObject.FindObjectOfType<VolumeRenderedObject>();
             Zoom(dt);
             Rotate(dt);
+            MoveCross(dt);
+            UpdateScaling(dt);
+        }
+
+        protected void MoveCross(float dt)
+        {
+            var box = GameObject.FindObjectOfType<CutoutBox>();
+            if (box != null)
+            {
+                box.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                box.transform.rotation = this.targetObject.transform.rotation;
+            }
+        }
+
+        protected void UpdateScaling(float dt)
+        {
+            if (Input.GetKey(KeyCode.Q) && scaleX < 1)
+            {
+                scaleX += scaleStep;
+            }
+            if (Input.GetKey(KeyCode.E) && scaleX > 0)
+            {
+                scaleX -= scaleStep;
+            }
+            if (Input.GetKey(KeyCode.A) && scaleY < 1)
+            {
+                scaleY += scaleStep;
+            }
+            if (Input.GetKey(KeyCode.D) && scaleY > 0)
+            {
+                scaleY -= scaleStep;
+            }
+            if (Input.GetKey(KeyCode.Z) && scaleZ < 1)
+            {
+                scaleZ += scaleStep;
+            }
+            if (Input.GetKey(KeyCode.C) && scaleZ > 0)
+            {
+                scaleZ -= scaleStep;
+            }
         }
 
         protected void Zoom(float dt)
