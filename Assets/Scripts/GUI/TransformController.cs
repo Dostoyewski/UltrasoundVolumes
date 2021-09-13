@@ -20,6 +20,9 @@ namespace UnityVolumeRendering
         private float scaleX = 1f;
         private float scaleY = 1f;
         private float scaleZ = 1f;
+        private float posX = 0.5f;
+        private float posY = 0f;
+        private float posZ = 0f;
         private float scaleStep = 0.001f;
 
         protected Camera cam;
@@ -49,7 +52,8 @@ namespace UnityVolumeRendering
             if (box != null)
             {
                 box.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                box.transform.rotation = this.targetObject.transform.rotation;
+                box.transform.SetParent(targetObject.transform);
+                box.transform.localPosition = new Vector3(posX, posY, posZ);
             }
         }
 
@@ -106,7 +110,7 @@ namespace UnityVolumeRendering
                 var right = transform.InverseTransformDirection(cam.transform.right);
                 targetRotation *= Quaternion.AngleAxis(mouseY, right);
             }
-            this.targetObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
+            targetObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
         }
 
