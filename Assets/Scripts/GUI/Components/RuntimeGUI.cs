@@ -42,6 +42,9 @@ namespace UnityVolumeRendering
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 VolumeObjectFactory.SpawnCutoutBox(objects);
+				objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                var box = GameObject.FindObjectOfType<CutoutBox>();
+                box.transform.SetParent(objects.transform);
             }
 
             // Show button for opening the dataset editor (for changing the visualisation)

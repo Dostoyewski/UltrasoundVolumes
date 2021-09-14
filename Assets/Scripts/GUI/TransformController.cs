@@ -54,7 +54,7 @@ namespace UnityVolumeRendering
             if (box != null)
             {
                 box.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                box.transform.SetParent(targetObject.transform);
+                // box.transform.SetParent(targetObject.transform);
                 box.transform.localPosition = new Vector3(posX, posY, posZ);
             }
         }
