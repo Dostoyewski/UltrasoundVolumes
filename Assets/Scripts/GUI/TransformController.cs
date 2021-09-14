@@ -61,6 +61,7 @@ namespace UnityVolumeRendering
             else if (plane != null)
             {
                 plane.transform.localPosition = new Vector3(posX, posY, posZ);
+                plane.transform.localScale = new Vector3(1, 1, 1);
                 if (currentDir == 0)
                 {
                     plane.transform.localRotation = Quaternion.Euler(90, 0, 0);
