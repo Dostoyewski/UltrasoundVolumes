@@ -32,8 +32,13 @@ namespace UnityVolumeRendering
                 this.DespawnAllCrossPlanes();
                 this.DespawnBoxes();
             }
+            
+            if (GUILayout.Button("Despawn cutout Box") && GameObject.FindObjectOfType<CutoutBox>() != null)
+            {
+                this.DespawnBoxes();
+            }
 
-            if (GUILayout.Button("Cutout") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
+            if (GUILayout.Button("Cutout Box") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 VolumeObjectFactory.SpawnCutoutBox(objects);

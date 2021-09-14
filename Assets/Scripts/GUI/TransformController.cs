@@ -20,10 +20,11 @@ namespace UnityVolumeRendering
         private float scaleX = 1f;
         private float scaleY = 1f;
         private float scaleZ = 1f;
-        private float posX = 0.5f;
+        private float posX = 0f;
         private float posY = 0f;
         private float posZ = 0f;
         private float scaleStep = 0.001f;
+        private float moveStep = 0.001f;
 
         protected Camera cam;
         protected Vector3 targetCamPosition;
@@ -43,7 +44,8 @@ namespace UnityVolumeRendering
             Zoom(dt);
             Rotate(dt);
             MoveCross(dt);
-            UpdateScaling(dt);
+            UpdateScaling();
+            UpdateCubePosition();
         }
 
         protected void MoveCross(float dt)
@@ -57,7 +59,35 @@ namespace UnityVolumeRendering
             }
         }
 
-        protected void UpdateScaling(float dt)
+        protected void UpdateCubePosition()
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                posY += moveStep;
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                posY -= moveStep;
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                posX += moveStep;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                posX -= moveStep;
+            }
+            if (Input.GetKey(KeyCode.Space))
+            {
+                posZ += moveStep;
+            }
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                posZ -= moveStep;
+            }
+        }
+
+        protected void UpdateScaling()
         {
             if (Input.GetKey(KeyCode.Q) && scaleX < 1)
             {
@@ -110,7 +140,11 @@ namespace UnityVolumeRendering
                 var right = transform.InverseTransformDirection(cam.transform.right);
                 targetRotation *= Quaternion.AngleAxis(mouseY, right);
             }
-            targetObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
+
+            if (targetObject != null)
+            {
+                targetObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
+            }
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
         }
 
