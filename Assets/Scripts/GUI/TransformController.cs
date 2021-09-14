@@ -25,6 +25,7 @@ namespace UnityVolumeRendering
         private float posZ = 0f;
         private float scaleStep = 0.001f;
         private float moveStep = 0.001f;
+        private float currentDir = 0f;
 
         protected Camera cam;
         protected Vector3 targetCamPosition;
@@ -51,11 +52,27 @@ namespace UnityVolumeRendering
         protected void MoveCross(float dt)
         {
             var box = GameObject.FindObjectOfType<CutoutBox>();
+            var plane = GameObject.FindObjectOfType<CrossSectionPlane>();
             if (box != null)
             {
                 box.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                // box.transform.SetParent(targetObject.transform);
                 box.transform.localPosition = new Vector3(posX, posY, posZ);
+            }
+            else if (plane != null)
+            {
+                plane.transform.localPosition = new Vector3(posX, posY, posZ);
+                if (currentDir == 0)
+                {
+                    plane.transform.localRotation = Quaternion.Euler(90, 0, 0);
+                }
+                else if (currentDir == 1)
+                {
+                    plane.transform.localRotation = Quaternion.Euler(0, 90, 0);
+                }
+                else if (currentDir == 2)
+                {
+                    plane.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                }
             }
         }
 
@@ -84,6 +101,15 @@ namespace UnityVolumeRendering
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 posZ -= moveStep;
+            }
+
+            if (Input.GetKeyUp(KeyCode.R))
+            {
+                if (currentDir == 2)
+                {
+                    currentDir = 0;
+                }
+                else currentDir += 1;
             }
         }
 

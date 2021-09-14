@@ -37,6 +37,20 @@ namespace UnityVolumeRendering
             {
                 this.DespawnBoxes();
             }
+            
+            if (GUILayout.Button("Despawn scalpels") && GameObject.FindObjectOfType<CrossSectionPlane>() != null)
+            {
+                DespawnAllCrossPlanes();
+            }
+            
+            if (GUILayout.Button("Scalpel") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
+            {
+                var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
+                VolumeObjectFactory.SpawnCrossSectionPlane(objects);
+                objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                var plane = GameObject.FindObjectOfType<CrossSectionPlane>();
+                plane.transform.SetParent(objects.transform);
+            }
 
             if (GUILayout.Button("Cutout Box") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
             {
@@ -178,6 +192,6 @@ namespace UnityVolumeRendering
                 GameObject.Destroy(cobj.gameObject);
             }
         }
-
+        
     }
 }
