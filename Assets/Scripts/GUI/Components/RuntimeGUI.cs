@@ -13,6 +13,7 @@ namespace UnityVolumeRendering
     /// </summary>
     public class RuntimeGUI : MonoBehaviour
     {
+        bool isRenderingSlices=false;
         private void OnGUI()
         {
             GUILayout.BeginVertical();
@@ -72,7 +73,21 @@ namespace UnityVolumeRendering
             {
                 EditSliceGUI.ShowWindow(GameObject.FindObjectOfType<SlicingPlane>());
             }
+            if ( GUILayout.Button("Show slices"))
+            {
+                isRenderingSlices=!isRenderingSlices;
+                FindObjectOfType<Camera>().rect= isRenderingSlices? (new Rect(0,0.5f,0.5f,0.5f)):(new Rect(0,0,1.0f,1.0f));
+                SlicingPlane[] planes =FindObjectsOfType<SlicingPlane>();
+                foreach (SlicingPlane item in planes)
+                {
+                    item.isRendering=!item.isRendering;
+                }
+            }
 
+            if ( GUILayout.Button("Exit"))
+            {
+                Application.Quit();
+            }
             GUILayout.EndVertical();
         }
 

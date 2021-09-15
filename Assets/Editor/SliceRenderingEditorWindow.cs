@@ -95,7 +95,7 @@ namespace UnityVolumeRendering
                 if (volRend != null)
                 {
                     selectedPlaneIndex = spawnedPlanes.Length;
-                    volRend.CreateSlicingPlane();
+                    volRend.CreateSlicingPlane(Quaternion.identity);
                 }
             }
 

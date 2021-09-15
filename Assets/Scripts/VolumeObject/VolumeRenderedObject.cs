@@ -13,6 +13,7 @@ namespace UnityVolumeRendering
 
         [HideInInspector]
         public VolumeDataset dataset;
+        
 
         [HideInInspector]
         public MeshRenderer meshRenderer;
@@ -20,15 +21,16 @@ namespace UnityVolumeRendering
         private RenderMode renderMode;
         private TFRenderMode tfRenderMode;
         private bool lightingEnabled;
+        private Vector3[] angles4Planes={new Vector3(0f,0f,0f),new Vector3(90.0f,0f,0f),new Vector3(90.0f,0f,-90.0f)};
 
         private Vector2 visibilityWindow = new Vector2(0.0f, 1.0f);
 
-        public SlicingPlane CreateSlicingPlane()
+        public SlicingPlane CreateSlicingPlane(Quaternion Q)
         {
             GameObject sliceRenderingPlane = GameObject.Instantiate(Resources.Load<GameObject>("SlicingPlane"));
             sliceRenderingPlane.transform.parent = transform;
             sliceRenderingPlane.transform.localPosition = Vector3.zero;
-            sliceRenderingPlane.transform.localRotation = Quaternion.identity;
+            sliceRenderingPlane.transform.localRotation = Q;
             sliceRenderingPlane.transform.localScale = Vector3.one * 0.1f; // TODO: Change the plane mesh instead and use Vector3.one
             MeshRenderer sliceMeshRend = sliceRenderingPlane.GetComponent<MeshRenderer>();
             sliceMeshRend.material = new Material(sliceMeshRend.sharedMaterial);
@@ -150,6 +152,17 @@ namespace UnityVolumeRendering
         private void Start()
         {
             UpdateMaaterialProperties();
+            CreateAxisPlanes();
+        }
+        private void CreateAxisPlanes()
+        {
+                    
+                    for (int i = 0; i < 3; i++)
+                    {
+                        SlicingPlane slice = CreateSlicingPlane(Quaternion.Euler(angles4Planes[i]));
+                        slice.MainAxis=i;
+                        slice.gameObject.GetComponent<MeshRenderer>().enabled=false;
+                    }
         }
     }
 }
