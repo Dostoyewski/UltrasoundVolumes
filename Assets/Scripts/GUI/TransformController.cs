@@ -23,8 +23,8 @@ namespace UnityVolumeRendering
         private float posX = 0f;
         private float posY = 0f;
         private float posZ = 0f;
-        private float scaleStep = 0.001f;
-        private float moveStep = 0.001f;
+        private float scaleStep = 0.007f;
+        private float moveStep = 0.007f;
         private float currentDir = 0f;
 
         protected Camera cam;
