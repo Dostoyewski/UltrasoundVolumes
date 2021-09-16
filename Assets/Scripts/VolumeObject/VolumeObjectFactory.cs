@@ -67,7 +67,7 @@ namespace UnityVolumeRendering
         public static void SpawnCutoutBox(VolumeRenderedObject volobj)
         {
             GameObject obj = GameObject.Instantiate((GameObject)Resources.Load("CutoutBox"));
-            obj.transform.rotation = Quaternion.Euler(270.0f, 0.0f, 0.0f);
+            obj.transform.rotation = Quaternion.identity;
             CutoutBox cbox = obj.gameObject.GetComponent<CutoutBox>();
             cbox.targetObject = volobj;
             obj.transform.position = volobj.transform.position;

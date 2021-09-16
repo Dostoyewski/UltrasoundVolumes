@@ -48,6 +48,15 @@ namespace UnityVolumeRendering
             UpdateScaling();
             UpdateCubePosition();
         }
+        public void SetBoxPosandSc(Vector3 pos, Vector3 scale)
+        {
+            posX=pos.x;
+            posY=pos.y;
+            posZ=pos.z;
+            scaleX=scale.x;
+            scaleY=scale.y;
+            scaleZ=scale.z;   
+        }
 
         protected void MoveCross(float dt)
         {

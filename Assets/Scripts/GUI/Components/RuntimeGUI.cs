@@ -27,24 +27,24 @@ namespace UnityVolumeRendering
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnLinearSequenceResult);
             }
 
-            if (GUILayout.Button("Despawn dataset") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
+            if (  GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Despawn dataset"))
             {
                 this.DespawnAllDatasets();
                 this.DespawnAllCrossPlanes();
                 this.DespawnBoxes();
             }
             
-            if (GUILayout.Button("Despawn cutout Box") && GameObject.FindObjectOfType<CutoutBox>() != null)
+            if ( GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Despawn cutout Box") )
             {
                 this.DespawnBoxes();
             }
             
-            if (GUILayout.Button("Despawn scalpels") && GameObject.FindObjectOfType<CrossSectionPlane>() != null)
+            if (GameObject.FindObjectOfType<CrossSectionPlane>() != null && GUILayout.Button("Despawn scalpels") )
             {
                 DespawnAllCrossPlanes();
             }
             
-            if (GUILayout.Button("Scalpel") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Scalpel") )
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 VolumeObjectFactory.SpawnCrossSectionPlane(objects);
@@ -53,7 +53,7 @@ namespace UnityVolumeRendering
                 plane.transform.SetParent(objects.transform);
             }
 
-            if (GUILayout.Button("Cutout Box") && GameObject.FindObjectOfType<VolumeRenderedObject>() != null)
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Cutout Box") )
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 VolumeObjectFactory.SpawnCutoutBox(objects);
@@ -68,12 +68,11 @@ namespace UnityVolumeRendering
                 EditVolumeGUI.ShowWindow(GameObject.FindObjectOfType<VolumeRenderedObject>());
             }
 
-            // Show button for opening the slicing plane editor (for changing the orientation and position)
-            if (GameObject.FindObjectOfType<SlicingPlane>() != null && GUILayout.Button("Edit slicing plane"))
+            if (GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Edit cutout box"))
             {
-                EditSliceGUI.ShowWindow(GameObject.FindObjectOfType<SlicingPlane>());
+                EditCutGUI.ShowWindow(GameObject.FindObjectOfType<CutoutBox>());
             }
-            if ( GUILayout.Button("Show slices"))
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Show slices") )
             {
                 isRenderingSlices=!isRenderingSlices;
                 FindObjectOfType<Camera>().rect= isRenderingSlices? (new Rect(0,0.5f,0.5f,0.5f)):(new Rect(0,0,1.0f,1.0f));
