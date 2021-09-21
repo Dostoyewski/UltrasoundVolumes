@@ -13,7 +13,7 @@ namespace UnityVolumeRendering
         private Rect windowRect = new Rect(150, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         private const int WINDOW_WIDTH = 400;
-        private const int WINDOW_HEIGHT = 400;
+        private const int WINDOW_HEIGHT = 250;
 
         private int selectedRenderModeIndex = 0;
         private Vector3 rotation;
@@ -51,7 +51,6 @@ namespace UnityVolumeRendering
         private void UpdateWindow(int windowID)
         {
             GUI.DragWindow(new Rect(0, 0, 10000, 20));
-            Debug.Log("updating");
             GUILayout.BeginVertical();
 
             if(targetObject != null)
@@ -72,15 +71,27 @@ namespace UnityVolumeRendering
                 targetObject.SetVisibilityWindow(visibilityWindow);
                 GUILayout.EndHorizontal();
 
-                // Rotation
-                GUILayout.Label("Rotation");
-                rotation.x = GUILayout.HorizontalSlider(rotation.x, 0.0f, 360.0f);
-                rotation.y = GUILayout.HorizontalSlider(rotation.y, 0.0f, 360.0f);
-                rotation.z = GUILayout.HorizontalSlider(rotation.z, 0.0f, 360.0f);
-                targetObject.transform.rotation = Quaternion.Euler(rotation);
+                // // Rotation
+                // GUILayout.Label("Rotation");
+                // rotation.x = GUILayout.HorizontalSlider(rotation.x, 0.0f, 360.0f);
+                // rotation.y = GUILayout.HorizontalSlider(rotation.y, 0.0f, 360.0f);
+                // rotation.z = GUILayout.HorizontalSlider(rotation.z, 0.0f, 360.0f);
+                // targetObject.transform.rotation = Quaternion.Euler(rotation);
+                
+                if(GUILayout.Button("Build transfer function", GUILayout.Width(200.0f)))
+                {
+                    TransferFunction tf = TransferFunctionDatabase.CreateTransferFunction();
+                    targetObject.transferFunction = tf;
+                }
+                
+                if(GUILayout.Button("Load default transfer function", GUILayout.Width(200.0f)))
+                {
+                    TransferFunction tf = TransferFunctionDatabase.LoadTransferFunction("Assets/Scripts/VolumeObject/default.tf");
+                    targetObject.transferFunction = tf;
+                }
 
                 // Load transfer function
-                if(GUILayout.Button("Load transfer function", GUILayout.Width(150.0f)))
+                if(GUILayout.Button("Load transfer function", GUILayout.Width(200.0f)))
                 {
                     RuntimeFileBrowser.ShowOpenFileDialog(OnLoadTransferFunction);
                 }
