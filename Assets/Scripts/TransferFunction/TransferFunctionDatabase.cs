@@ -25,6 +25,14 @@ namespace UnityVolumeRendering
             public const int VERSION_ID = 1;
         }
 
+        public static TransferFunction CreateDefaultTransferFunction()
+        {
+            TransferFunction tf = new TransferFunction();
+            tf.AddControlPoint(new TFColourControlPoint(0.0f, new Color(0.010706295259296894f, 0.029527906328439714f, 0.019690310582518579f, 1.0f)));
+            tf.AddControlPoint(new TFAlphaControlPoint(0.0025641026441007854f, 0.01794871874153614f));
+            return tf;
+        }
+
         public static TransferFunction CreateTransferFunction()
         {
             TransferFunction tf = new TransferFunction();

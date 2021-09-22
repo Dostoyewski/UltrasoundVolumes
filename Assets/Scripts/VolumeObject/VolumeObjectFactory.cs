@@ -26,7 +26,7 @@ namespace UnityVolumeRendering
             const int noiseDimY = 512;
             Texture2D noiseTexture = NoiseTextureGenerator.GenerateNoiseTexture(noiseDimX, noiseDimY);
             
-            TransferFunction tf = TransferFunctionDatabase.LoadTransferFunction("Assets/Scripts/VolumeObject/default.tf");
+            TransferFunction tf = TransferFunctionDatabase.CreateDefaultTransferFunction();
             Texture2D tfTexture = tf.GetTexture();
             volObj.transferFunction = tf;
 

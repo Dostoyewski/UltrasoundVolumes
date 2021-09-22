@@ -86,7 +86,7 @@ namespace UnityVolumeRendering
                 
                 if(GUILayout.Button("Load default transfer function", GUILayout.Width(200.0f)))
                 {
-                    TransferFunction tf = TransferFunctionDatabase.LoadTransferFunction("Assets/Scripts/VolumeObject/default.tf");
+                    TransferFunction tf = TransferFunctionDatabase.CreateDefaultTransferFunction();
                     targetObject.transferFunction = tf;
                 }
 
