@@ -142,11 +142,44 @@ class Model(object):
                 if a < 0:
                     a += math.pi
                 l = (x ** 2 + y ** 2) ** 0.5
+                i1, i2 = int(l), int(l) + 1
+                if x < 0:
+                    i1 = offset - i1
+                    i2 = offset - i2
+                else:
+                    i1 += offset
+                    i2 += offset
                 first, second = self.get_nearest_img(a)
                 coefs[i][j]['first'], coefs[i][j]['second'] = first, second
-                coefs[i][j]['ind0'], coefs[i][j]['ind1'] = int(l), int(l) + 1
-
+                coefs[i][j]['ind0'], coefs[i][j]['ind1'] = i1, i2
+                # TODO fix calculation
+                a1, a2, a3, a4 = self.calc_weights(x, y, int(l), int(l) + 1,
+                                                   self.angles[first], self.angles[second])
+                coefs[i][j]['a1'], coefs[i][j]['a2'] = a1, a2
+                coefs[i][j]['a3'], coefs[i][j]['a4'] = a3, a4
         pass
+
+    def calc_weights(self, x, y, p1, p2, a1, a2):
+        """
+        Calculates weights for interpolation
+        :param x: x
+        :param y: y
+        :param p1: dist of image point 1
+        :param p2: dist of image point 2
+        :param a1: angle of first image
+        :param a2: angle of second image
+        :return:
+        """
+        l1 = ((x - p1 * cos(a1)) ** 2 + (y - p1 * sin(a1)) ** 2) ** 0.5
+        l2 = ((x - p2 * cos(a1)) ** 2 + (y - p2 * sin(a1)) ** 2) ** 0.5
+        l3 = ((x - p1 * cos(a2)) ** 2 + (y - p1 * sin(a2)) ** 2) ** 0.5
+        l4 = ((x - p2 * cos(a2)) ** 2 + (y - p2 * sin(a2)) ** 2) ** 0.5
+        try:
+            c = (l1 * l2 * l3 * l4) / (l1 * l2 * (l3 + l4) + l1 * l3 * l4 + l2 * l3 * l4)
+            return c / l1, c / l2, c / l3, c / l4
+        except ZeroDivisionError:
+            c = 0.5
+            return 0, c / l2, 0, c / l4
 
     def process_transform(self):
         for j in tqdm.tqdm(range(len(self.a))):
