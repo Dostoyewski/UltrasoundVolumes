@@ -56,6 +56,7 @@ class Model(object):
         self.names = None
         self.load_angles()
         self.get_filenames()
+        self.coefs = None
         max_x, max_y = 0, 0
         for name in self.names:
             img = cv2.imread(self.names[1])
@@ -83,6 +84,13 @@ class Model(object):
                 # Тут создан отдельный класс картинки
                 n_img = self.images[i] + self.images[0]
             self.process_images([self.images[i], n_img], [-3, -2, -1, 0, 1, 2, 3])
+
+    def run_fillament(self):
+        for z in range(len(self.a)):
+            for i in range(len(self.a[z])):
+                for j in range(len(self.a[z][i])):
+                    params = self.coefs[i][j]
+                    # TODO: write image calculus
 
     def process_images(self, imgs, offsets=[0]):
         """
@@ -137,7 +145,7 @@ class Model(object):
         offset = round(self.shape[0] / 2)
         for i in range(self.shape[0]):
             for j in range(self.shape[0]):
-                x, y = i - offset, j - offset
+                x, y = i - offset, offset - j
                 a = math.atan2(y, x)
                 if a < 0:
                     a += math.pi
@@ -157,7 +165,7 @@ class Model(object):
                                                    self.angles[first], self.angles[second])
                 coefs[i][j]['a1'], coefs[i][j]['a2'] = a1, a2
                 coefs[i][j]['a3'], coefs[i][j]['a4'] = a3, a4
-        pass
+        self.coefs = coefs
 
     def calc_weights(self, x, y, p1, p2, a1, a2):
         """
