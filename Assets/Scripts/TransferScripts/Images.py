@@ -1,3 +1,4 @@
+import math
 import os
 from math import sin, cos, atan2
 
@@ -108,12 +109,12 @@ class Model(object):
 
     def get_nearest_img(self, angle):
         for i in range(len(self.angles)):
-            ang = float(self.angles[i])
-            ang = atan2(sin(ang), cos(ang))
+            ang = self.angles[i]
             if ang < angle:
                 continue
             else:
                 return i - 1, i
+        return len(self.angles) - 1, 0
 
     def interp_plate(self):
         for j in tqdm.tqdm(range(len(self.a[0]))):
@@ -130,6 +131,22 @@ class Model(object):
                             val += self.a[i][point[0]][point[1]] / point[2]
                             coefs += 1 / point[2]
                         self.a[i][j][k] = round(val / coefs)
+
+    def calc_coefs(self):
+        coefs = [[{} for j in range(self.shape[0])] for i in range(self.shape[0])]
+        offset = round(self.shape[0] / 2)
+        for i in range(self.shape[0]):
+            for j in range(self.shape[0]):
+                x, y = i - offset, j - offset
+                a = math.atan2(y, x)
+                if a < 0:
+                    a += math.pi
+                l = (x ** 2 + y ** 2) ** 0.5
+                first, second = self.get_nearest_img(a)
+                coefs[i][j]['first'], coefs[i][j]['second'] = first, second
+                coefs[i][j]['ind0'], coefs[i][j]['ind1'] = int(l), int(l) + 1
+
+        pass
 
     def process_transform(self):
         for j in tqdm.tqdm(range(len(self.a))):
@@ -175,17 +192,18 @@ class Model(object):
         :return:
         """
         angles = []
-        with open("./CaptSave.tag", 'r') as f:
+        with open(self.a_file, 'r') as f:
             lines = f.readlines()
             for line in lines:
                 angles.append(line.split(sep=';')[10])
-        self.angles = angles
+        first_val = float(angles[0])
+        self.angles = [float(angle) - first_val for angle in angles]
 
     def save_vertex(self):
         os.mkdir("./result")
         print(self.a.shape)
-        for i in tqdm.tqdm(range(self.shape[1])):
-            img = self.a[:, :, i]
+        for i in tqdm.tqdm(range(self.shape[0])):
+            img = self.a[:, i, :]
             if i >= 100:
                 cv2.imwrite("./result/Image" + str(i) + ".png", img)
             elif i < 10:
@@ -213,11 +231,12 @@ if __name__ == "__main__":
     # shape = i.shape
     # a = np.ndarray((shape[1] + 2, int(1.2 * shape[0]), int(1.2 * shape[0])))
     # i.get_dists(10, 10, 0)
-    m = Model("C:/Users/Федор/Documents/GIT/UnityVolumeRendering/DataFiles/sv1/5/png",
-              "C:/Users/Федор/Documents/GIT/UnityVolumeRendering/DataFiles/sv1/5/png/CaptSave.tag")
+    m = Model("C:\\Users\\FEDOR\\Documents\\data\\5\\png",
+              "C:\\Users\\FEDOR\\Documents\\data\\5\\png\\CaptSave.tag")
+    m.calc_coefs()
     m.transform_img()
     print("Image transformed")
     # m.interp_plate()
     # m.process_transform()
-    # m.interp_plate()
+    m.interp_plate()
     m.save_vertex()
