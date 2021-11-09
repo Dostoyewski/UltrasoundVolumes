@@ -154,7 +154,7 @@ class Model(object):
         for i in range(self.shape[0]):
             for j in range(self.shape[0]):
                 x, y = i - offset, offset - j
-                a = math.atan2(y, x)
+                a = math.atan2(x, y)
                 if a < 0:
                     a += math.pi
                 l = (x ** 2 + y ** 2) ** 0.5
