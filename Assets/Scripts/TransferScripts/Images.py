@@ -86,11 +86,19 @@ class Model(object):
             self.process_images([self.images[i], n_img], [-3, -2, -1, 0, 1, 2, 3])
 
     def run_fillament(self):
-        for z in range(len(self.a)):
+        for z in tqdm.tqdm(range(len(self.a))):
             for i in range(len(self.a[z])):
                 for j in range(len(self.a[z][i])):
                     params = self.coefs[i][j]
-                    # TODO: write image calculus
+                    if params['ind0'] < 0 or params['ind0'] >= self.shape[0] or params['ind1'] < 0 or params['ind1'] >= \
+                            self.shape[0]:
+                        self.a[z][i][j] = 0
+                    else:
+                        w1 = self.images[params['first']].image[z][params['ind0']] * params['a1']
+                        w2 = self.images[params['first']].image[z][params['ind1']] * params['a2']
+                        w3 = self.images[params['second']].image[z][params['ind0']] * params['a3']
+                        w4 = self.images[params['second']].image[z][params['ind1']] * params['a4']
+                        self.a[z][i][j] = w1 + w2 + w3 + w4
 
     def process_images(self, imgs, offsets=[0]):
         """
@@ -275,9 +283,10 @@ if __name__ == "__main__":
     m = Model("C:\\Users\\FEDOR\\Documents\\data\\5\\png",
               "C:\\Users\\FEDOR\\Documents\\data\\5\\png\\CaptSave.tag")
     m.calc_coefs()
-    m.transform_img()
+    m.run_fillament()
+    # m.transform_img()
     print("Image transformed")
     # m.interp_plate()
     # m.process_transform()
-    m.interp_plate()
+    # m.interp_plate()
     m.save_vertex()
