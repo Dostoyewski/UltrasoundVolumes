@@ -108,6 +108,9 @@ class Model(object):
                     a += math.pi
                 l = (x ** 2 + y ** 2) ** 0.5
                 i1, i2 = int(l), int(l) + 1
+                if l - int(l) < 0.02:
+                    i1 -= 1
+                    i2 -= 1
                 if x < 0:
                     i1 = offset - i1
                     i2 = offset - i2
