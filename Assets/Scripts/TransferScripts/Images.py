@@ -128,6 +128,7 @@ class Model(object):
                     i1 += offset
                     i2 += offset
                 first, second = self.get_nearest_img(a)
+                # TODO wright script for weight calculating
                 points = [Point(self.angles[first], int(l) - 1, x, y),
                           Point(self.angles[second], int(l) - 1, x, y),
                           Point(self.angles[first], int(l), x, y),
