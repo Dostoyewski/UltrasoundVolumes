@@ -16,11 +16,11 @@ class Point(object):
     """
 
     def __init__(self, a, p, x, y, index):
-        self.angle = a
+        self.angle = math.pi / 2 - a
         self.p = p
         self.x = x
         self.y = y
-        self.l = ((x - p * cos(a)) ** 2 + (y - p * sin(a)) ** 2) ** 0.5
+        self.l = ((x - p * cos(self.angle)) ** 2 + (y - p * sin(self.angle)) ** 2) ** 0.5
         self.i = index
         self.a = None
 
@@ -144,10 +144,14 @@ class Model(object):
             if ang < angle:
                 continue
             else:
-                return i - 1, i
-        return len(self.angles) - 1, 0
+                return i, i - 1
+        return 0, len(self.angles) - 1
 
     def calc_coefs(self):
+        """
+        Calculates coefficients for image interpolation.
+        :return:
+        """
         self.coefs = [[[] for j in range(self.shape[1])] for i in range(self.shape[1])]
         offset = round(self.shape[1] / 2)
         for i in range(self.shape[1]):
@@ -165,26 +169,27 @@ class Model(object):
                     i1 += offset
                     i2 += offset
                 first, second = self.get_nearest_img(a)
-                sec_p_o = second + 1 if second < len(self.angles) - 1 else 0
-                points = [Point(self.angles[first], int(l) - 1, x, y, first),
-                          Point(self.angles[second], int(l) - 1, x, y, second),
-                          Point(self.angles[first], int(l), x, y, first),
-                          Point(self.angles[second], int(l), x, y, second),
-                          Point(self.angles[first], int(l) + 1, x, y, first),
-                          Point(self.angles[second], int(l) + 1, x, y, second),
-                          Point(self.angles[first], int(l) - 2, x, y, first),
-                          Point(self.angles[second], int(l) - 2, x, y, second),
-                          Point(self.angles[first - 1], int(l), x, y, first),
-                          Point(self.angles[sec_p_o], int(l), x, y, second),
-                          Point(self.angles[first - 1], int(l) + 1, x, y, first),
-                          Point(self.angles[sec_p_o], int(l) + 1, x, y, second)
-                          ]
-                points.sort(key=lambda x: x.l)
-                val = self.calc_weights_from_points(points[:4], offset)
+                # TODO fix distance calculating
+                points_l = []
+                points_r = []
+                for k in range(int(l) - 2, int(l) + 2):
+                    points_l.append(Point(self.angles[first], k, x, y, first))
+                    points_r.append(Point(self.angles[second], k, x, y, second))
+                points_l.extend(points_r)
+                points_l.sort(key=lambda x: x.l)
+                points_r.sort(key=lambda x: x.l)
+                res = [points_l[0], points_l[1], points_r[0], points_r[1]]
+                val = self.calc_weights_from_points(points_l[0:4], offset)
                 self.coefs[i][j] = val
         self.coefs = np.array(self.coefs, dtype=np.float32)
 
     def calc_weights_from_points(self, points, offset):
+        """
+        Calculates weight for interpolation with Point list given
+        :param points: list of points instances
+        :param offset: offset from middle of center point
+        :return:
+        """
         p = 1
         sum_a = sum([point.get_weight(p) for point in points])
         c = 1 / sum_a
@@ -213,12 +218,12 @@ class Model(object):
         self.angles = [float(angle) - first_val for angle in angles]
 
     def save_vertex(self):
-        foldername = 'result_new_alg2'
+        foldername = 'result_new_alg2_blur'
         os.mkdir("./" + foldername)
         print(self.a.shape)
         for i in tqdm.tqdm(range(self.shape[0])):
             img = self.a[i, :, :]
-            # img = cv2.blur(img, (3, 3))
+            img = cv2.blur(img, (3, 3))
             if i >= 100:
                 cv2.imwrite("./" + foldername + "/Image" + str(i) + ".png", img)
             elif i < 10:
