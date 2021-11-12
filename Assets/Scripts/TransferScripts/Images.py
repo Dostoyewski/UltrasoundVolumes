@@ -14,12 +14,30 @@ class Point(object):
     Класс точки на картинке, нужен чтобы оптимально находить ближайшие
     """
 
-    def __init__(self, a, p, x, y):
+    def __init__(self, a, p, x, y, index):
         self.angle = a
         self.p = p
         self.x = x
         self.y = y
         self.l = ((x - p * cos(a)) ** 2 + (y - p * sin(a)) ** 2) ** 0.5
+        self.i = index
+        self.a = None
+
+    def get_weight(self, p):
+        if self.l != 0:
+            self.a = 1 / (self.l ** p)
+            return self.a
+        else:
+            self.a = 1
+            return 1
+
+    def construct_info_arr(self, c, offset):
+        self.a *= c
+        if self.x < 0:
+            self.p = offset - self.p
+        else:
+            self.p += offset
+        return [self.i, self.p, self.a]
 
 
 def extract_dist(json):
@@ -88,18 +106,18 @@ class Model(object):
                 self.images.append(Image(self.names[i], float(self.angles[i])))
 
     def run_fillament(self):
+        img = [image.image for image in self.images]
         for z in tqdm.tqdm(range(len(self.a))):
             for i in range(len(self.a[z])):
                 for j in range(len(self.a[z][i])):
                     params = self.coefs[i][j]
-                    if params[2] < 0 or params[2] >= self.shape[1] or params[3] < 0 or params[3] >= self.shape[1]:
+                    if params is None:
                         self.a[z][i][j] = 0
                     else:
-                        w1 = self.images[params[0]].image[z][params[2]] * params[4]
-                        w2 = self.images[params[0]].image[z][params[3]] * params[5]
-                        w3 = self.images[params[1]].image[z][params[2]] * params[6]
-                        w4 = self.images[params[1]].image[z][params[3]] * params[7]
-                        self.a[z][i][j] = w1 + w2 + w3 + w4
+                        s = 0
+                        for k in range(4):
+                            s += img[params[k][0]][z][params[k][1]] * params[k][2]
+                        self.a[z][i][j] = s
 
     def get_nearest_img(self, angle):
         for i in range(len(self.angles)):
@@ -127,18 +145,36 @@ class Model(object):
                 else:
                     i1 += offset
                     i2 += offset
+                if i1 < 0 or i1 >= self.shape[1] or i2 < 0 or i2 >= self.shape[1]:
+                    self.coefs[i][j] = None
+                    continue
                 first, second = self.get_nearest_img(a)
-                # TODO wright script for weight calculating
-                points = [Point(self.angles[first], int(l) - 1, x, y),
-                          Point(self.angles[second], int(l) - 1, x, y),
-                          Point(self.angles[first], int(l), x, y),
-                          Point(self.angles[second], int(l), x, y),
-                          Point(self.angles[first], int(l) + 1, x, y),
-                          Point(self.angles[second], int(l) + 1, x, y)]
+                sec_p_o = second + 1 if second < len(self.angles) - 1 else 0
+                points = [Point(self.angles[first], int(l) - 1, x, y, first),
+                          Point(self.angles[second], int(l) - 1, x, y, second),
+                          Point(self.angles[first], int(l), x, y, first),
+                          Point(self.angles[second], int(l), x, y, second),
+                          Point(self.angles[first], int(l) + 1, x, y, first),
+                          Point(self.angles[second], int(l) + 1, x, y, second),
+                          Point(self.angles[first - 1], int(l) - 1, x, y, first),
+                          Point(self.angles[sec_p_o], int(l) - 1, x, y, second),
+                          Point(self.angles[first - 1], int(l), x, y, first),
+                          Point(self.angles[sec_p_o], int(l), x, y, second),
+                          Point(self.angles[first - 1], int(l) + 1, x, y, first),
+                          Point(self.angles[sec_p_o], int(l) + 1, x, y, second)
+                          ]
                 points.sort(key=lambda x: x.l)
+                val = self.calc_weights_from_points(points[:4], offset)
                 a1, a2, a3, a4 = self.calc_weights(x, y, int(l), int(l) + 1,
                                                    self.angles[first], self.angles[second])
-                self.coefs[i][j] = [first, second, i1, i2, a1, a2, a3, a4]
+                # self.coefs[i][j] = [first, second, i1, i2, a1, a2, a3, a4]
+                self.coefs[i][j] = val
+
+    def calc_weights_from_points(self, points, offset):
+        p = 1
+        sum_a = sum([point.get_weight(p) for point in points])
+        c = 1 / sum_a
+        return [point.construct_info_arr(c, offset) for point in points]
 
     def calc_weights(self, x, y, p1, p2, a1, a2):
         """
@@ -190,7 +226,7 @@ class Model(object):
         self.angles = [float(angle) - first_val for angle in angles]
 
     def save_vertex(self):
-        foldername = 'result'
+        foldername = 'result_new_alg2'
         os.mkdir("./" + foldername)
         print(self.a.shape)
         for i in tqdm.tqdm(range(self.shape[0])):
