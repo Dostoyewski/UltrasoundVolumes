@@ -5,6 +5,7 @@ from math import sin, cos
 import cv2
 import numpy as np
 import tqdm
+from numba import njit
 
 DEBUG = True
 
@@ -79,6 +80,24 @@ class Image(object):
         return cos(self.angle) * (i - self.offset), sin(self.angle) * (i - self.offset)
 
 
+@njit
+def run_njit_fill(img, a, coefs, border):
+    for z in range(len(a)):
+        for i in range(len(a[z])):
+            for j in range(len(a[z][i])):
+                params = coefs[i][j]
+                s = 0
+                for k in range(4):
+                    # Add to remove negative indexing
+                    if params[k][1] < 0 or params[k][1] >= border:
+                        a[z][i][j] = 0
+                        break
+                    image = img[int(params[0][0])]
+                    s += image[z][int(params[k][1])] * params[k][2]
+                a[z][i][j] = s
+    return a
+
+
 class Model(object):
     def __init__(self, path, angle_file):
         self.a_file = angle_file
@@ -111,7 +130,7 @@ class Model(object):
             for i in range(len(self.a[z])):
                 for j in range(len(self.a[z][i])):
                     params = self.coefs[i][j]
-                    if params is None:
+                    if params == -1:
                         self.a[z][i][j] = 0
                     else:
                         s = 0
@@ -129,7 +148,7 @@ class Model(object):
         return len(self.angles) - 1, 0
 
     def calc_coefs(self):
-        self.coefs = [[{} for j in range(self.shape[1])] for i in range(self.shape[1])]
+        self.coefs = [[[] for j in range(self.shape[1])] for i in range(self.shape[1])]
         offset = round(self.shape[1] / 2)
         for i in range(self.shape[1]):
             for j in range(self.shape[1]):
@@ -145,9 +164,6 @@ class Model(object):
                 else:
                     i1 += offset
                     i2 += offset
-                if i1 < 0 or i1 >= self.shape[1] or i2 < 0 or i2 >= self.shape[1]:
-                    self.coefs[i][j] = None
-                    continue
                 first, second = self.get_nearest_img(a)
                 sec_p_o = second + 1 if second < len(self.angles) - 1 else 0
                 points = [Point(self.angles[first], int(l) - 1, x, y, first),
@@ -156,8 +172,8 @@ class Model(object):
                           Point(self.angles[second], int(l), x, y, second),
                           Point(self.angles[first], int(l) + 1, x, y, first),
                           Point(self.angles[second], int(l) + 1, x, y, second),
-                          Point(self.angles[first - 1], int(l) - 1, x, y, first),
-                          Point(self.angles[sec_p_o], int(l) - 1, x, y, second),
+                          Point(self.angles[first], int(l) - 2, x, y, first),
+                          Point(self.angles[second], int(l) - 2, x, y, second),
                           Point(self.angles[first - 1], int(l), x, y, first),
                           Point(self.angles[sec_p_o], int(l), x, y, second),
                           Point(self.angles[first - 1], int(l) + 1, x, y, first),
@@ -165,43 +181,14 @@ class Model(object):
                           ]
                 points.sort(key=lambda x: x.l)
                 val = self.calc_weights_from_points(points[:4], offset)
-                a1, a2, a3, a4 = self.calc_weights(x, y, int(l), int(l) + 1,
-                                                   self.angles[first], self.angles[second])
-                # self.coefs[i][j] = [first, second, i1, i2, a1, a2, a3, a4]
                 self.coefs[i][j] = val
+        self.coefs = np.array(self.coefs, dtype=np.float32)
 
     def calc_weights_from_points(self, points, offset):
         p = 1
         sum_a = sum([point.get_weight(p) for point in points])
         c = 1 / sum_a
         return [point.construct_info_arr(c, offset) for point in points]
-
-    def calc_weights(self, x, y, p1, p2, a1, a2):
-        """
-        Calculates weights for interpolation
-        :param x: x
-        :param y: y
-        :param p1: dist of image point 1
-        :param p2: dist of image point 2
-        :param a1: angle of first image
-        :param a2: angle of second image
-        :return:
-        """
-        l1 = ((x - p1 * cos(a1)) ** 2 + (y - p1 * sin(a1)) ** 2) ** 0.5
-        l2 = ((x - p2 * cos(a1)) ** 2 + (y - p2 * sin(a1)) ** 2) ** 0.5
-        l3 = ((x - p1 * cos(a2)) ** 2 + (y - p1 * sin(a2)) ** 2) ** 0.5
-        l4 = ((x - p2 * cos(a2)) ** 2 + (y - p2 * sin(a2)) ** 2) ** 0.5
-        try:
-            p = 4
-            a1 = 1 / (l1 ** p)
-            a2 = 1 / (l2 ** p)
-            a3 = 1 / (l3 ** p)
-            a4 = 1 / (l4 ** p)
-            c = 1 / (a1 + a2 + a3 + a4)
-            return c * a1, c * a2, c * a3, c * a4
-        except ZeroDivisionError:
-            c = 0.5
-            return 0, c / l2, 0, c / l4
 
     def get_image_from_angle(self, angle):
         for im in self.images:
@@ -244,6 +231,7 @@ if __name__ == "__main__":
     m = Model("C:\\Users\\FEDOR\\Documents\\data\\5\\png",
               "C:\\Users\\FEDOR\\Documents\\data\\5\\png\\CaptSave.tag")
     m.calc_coefs()
-    m.run_fillament()
+    img = np.array([image.image for image in m.images])
+    m.a = run_njit_fill(img, m.a, m.coefs, m.shape[1] - 1)
     print("Image transformed")
     m.save_vertex()
