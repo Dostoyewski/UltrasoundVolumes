@@ -1,5 +1,7 @@
+import argparse
 import math
 import os
+import shutil
 from math import sin, cos
 
 import cv2
@@ -139,6 +141,11 @@ class Model(object):
                         self.a[z][i][j] = s
 
     def get_nearest_img(self, angle):
+        """
+        Returns nearest image using angle distance calculating
+        :param angle:
+        :return:
+        """
         for i in range(len(self.angles)):
             ang = self.angles[i]
             if ang < angle:
@@ -219,7 +226,11 @@ class Model(object):
 
     def save_vertex(self):
         foldername = 'result_new_alg2_blur'
-        os.mkdir("./" + foldername)
+        try:
+            os.mkdir("./" + foldername)
+        except FileExistsError:
+            shutil.rmtree("./" + foldername)
+            os.mkdir("./" + foldername)
         print(self.a.shape)
         for i in tqdm.tqdm(range(self.shape[0])):
             img = self.a[i, :, :]
@@ -233,8 +244,15 @@ class Model(object):
 
 
 if __name__ == "__main__":
-    m = Model("C:\\Users\\FEDOR\\Documents\\data\\5\\png",
-              "C:\\Users\\FEDOR\\Documents\\data\\5\\png\\CaptSave.tag")
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("dir_path")
+    parser.add_argument("tag_path")
+    args = parser.parse_args()
+
+    # "C:\\Users\\FEDOR\\Documents\\data\\5\\png"
+    # "C:\\Users\\FEDOR\\Documents\\data\\5\\png\\CaptSave.tag"
+    m = Model(args.dir_path, args.tag_path)
     m.calc_coefs()
     img = np.array([image.image for image in m.images])
     m.a = run_njit_fill(img, m.a, m.coefs, m.shape[1] - 1)
