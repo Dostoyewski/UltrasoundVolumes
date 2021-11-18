@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace UnityVolumeRendering
@@ -145,8 +147,13 @@ namespace UnityVolumeRendering
                 DespawnAllDatasets();
 
                 string filePath = result.path;
-
-                RadialImageSequenceImporter importer = new RadialImageSequenceImporter(filePath);
+                string captPath = filePath + "/CaptSave.tag";
+                ProcessStartInfo startInfo = new ProcessStartInfo("C:/Users/FEDOR/Documents/GIT/UltrasoundVolumes/dist/Images.exe");
+                startInfo.Arguments = filePath + " " + captPath;
+                startInfo.UseShellExecute = true;
+                Process p = Process.Start(startInfo);
+                p.WaitForExit();
+                RadialImageSequenceImporter importer = new RadialImageSequenceImporter(filePath + "/result_new_alg2_blur");
                 VolumeDataset dataset = importer.Import();
                 // Spawn the object
                 if (dataset != null)
