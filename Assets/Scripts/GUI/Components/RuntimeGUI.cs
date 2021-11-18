@@ -139,7 +139,7 @@ namespace UnityVolumeRendering
             }
         }
 
-		private void OnRadialSequenceResult(RuntimeFileBrowser.DialogResult result)
+        private void OnRadialSequenceResult(RuntimeFileBrowser.DialogResult result)
         {
             if (!result.cancelled)
             {
@@ -148,7 +148,7 @@ namespace UnityVolumeRendering
 
                 string filePath = result.path;
                 string captPath = filePath + "/CaptSave.tag";
-                ProcessStartInfo startInfo = new ProcessStartInfo("C:/Users/FEDOR/Documents/GIT/UltrasoundVolumes/dist/Images.exe");
+                ProcessStartInfo startInfo = new ProcessStartInfo("C:/Images.exe");
                 startInfo.Arguments = filePath + " " + captPath;
                 startInfo.UseShellExecute = true;
                 Process p = Process.Start(startInfo);
