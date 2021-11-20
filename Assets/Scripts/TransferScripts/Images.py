@@ -234,7 +234,7 @@ class Model(object):
         print(self.a.shape)
         for i in tqdm.tqdm(range(self.shape[0])):
             img = self.a[i, :, :]
-            img = cv2.blur(img, (3, 3))
+            img = cv2.blur(img, (4, 4))
             if i >= 100:
                 cv2.imwrite("./" + foldername + "/Image" + str(i) + ".png", img)
             elif i < 10:
