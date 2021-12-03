@@ -18,7 +18,7 @@ class Point(object):
     """
 
     def __init__(self, a, p, x, y, index):
-        self.angle = math.pi / 2 - a
+        self.angle = math.pi / 4 - a
         self.p = p
         self.x = x
         self.y = y
@@ -161,27 +161,38 @@ class Model(object):
         """
         self.coefs = [[[] for j in range(self.shape[1])] for i in range(self.shape[1])]
         offset = round(self.shape[1] / 2)
+        aaa = []
         for i in range(self.shape[1]):
             for j in range(self.shape[1]):
                 x, y = i - offset, offset - j
-                a = math.atan2(x, y)
-                if a < 0:
-                    a += math.pi
+                a = math.atan2(x, y) + math.pi
+                if a >= math.pi:
+                    a -= math.pi
+                aaa.append(a)
                 l = (x ** 2 + y ** 2) ** 0.5
                 i1, i2 = int(l), int(l) + 1
                 if x < 0:
                     i1 = offset - i1
                     i2 = offset - i2
-                else:
+                elif x != 0:
                     i1 += offset
                     i2 += offset
                 first, second = self.get_nearest_img(a)
+                fp, fd = first, first
+                if first < len(self.angles) - 1:
+                    fp = first + 1
+                else:
+                    fp = 0
                 # TODO fix distance calculating
                 points_l = []
                 points_r = []
-                for k in range(int(l) - 2, int(l) + 2):
+                for k in range(int(l) - 5, int(l) + 5):
                     points_l.append(Point(self.angles[first], k, x, y, first))
+                    points_l.append(Point(self.angles[fp], k, x, y, first))
+                    points_l.append(Point(self.angles[first - 1], k, x, y, first))
                     points_r.append(Point(self.angles[second], k, x, y, second))
+                    points_r.append(Point(self.angles[second - 1], k, x, y, second))
+                    points_r.append(Point(self.angles[second - 2], k, x, y, second))
                 points_l.extend(points_r)
                 points_l.sort(key=lambda x: x.l)
                 points_r.sort(key=lambda x: x.l)
@@ -189,6 +200,7 @@ class Model(object):
                 val = self.calc_weights_from_points(points_l[0:4], offset)
                 self.coefs[i][j] = val
         self.coefs = np.array(self.coefs, dtype=np.float32)
+        aaa.sort()
 
     def calc_weights_from_points(self, points, offset):
         """
@@ -234,7 +246,9 @@ class Model(object):
         print(self.a.shape)
         for i in tqdm.tqdm(range(self.shape[0])):
             img = self.a[i, :, :]
-            img = cv2.blur(img, (4, 4))
+            # img = cv2.blur(img, (4, 4))
+            img = img.astype('uint8')
+            img = cv2.bilateralFilter(img, 5, 61, 39)
             if i >= 100:
                 cv2.imwrite("./" + foldername + "/Image" + str(i) + ".png", img)
             elif i < 10:
