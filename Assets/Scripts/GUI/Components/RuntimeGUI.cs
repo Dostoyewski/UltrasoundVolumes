@@ -76,12 +76,12 @@ namespace UnityVolumeRendering
             }
             if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Show slices") )
             {
-                isRenderingSlices=!isRenderingSlices;
-                FindObjectOfType<Camera>().rect= isRenderingSlices? (new Rect(0,0.5f,0.5f,0.5f)):(new Rect(0,0,1.0f,1.0f));
-                SlicingPlane[] planes =FindObjectsOfType<SlicingPlane>();
+                isRenderingSlices = !isRenderingSlices;
+                FindObjectOfType<Camera>().rect = isRenderingSlices? (new Rect(0,0.5f,0.5f,0.5f)):(new Rect(0,0,1.0f,1.0f));
+                SlicingPlane[] planes = FindObjectsOfType<SlicingPlane>();
                 foreach (SlicingPlane item in planes)
                 {
-                    item.isRendering=!item.isRendering;
+                    item.isRendering = !item.isRendering;
                 }
             }
 
