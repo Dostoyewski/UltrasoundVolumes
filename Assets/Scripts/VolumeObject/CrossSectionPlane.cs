@@ -14,10 +14,15 @@ namespace UnityVolumeRendering
         /// </summary>
         public VolumeRenderedObject targetObject;
 
+        public SpotCapsule spot;
+
         private void OnDisable()
         {
             if (targetObject != null)
+            {
                 targetObject.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_PLANE");
+                spot.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_PLANE");
+            }
         }
 
         private void Update()
@@ -29,6 +34,11 @@ namespace UnityVolumeRendering
 
             mat.EnableKeyword("CUTOUT_PLANE");
             mat.SetMatrix("_CrossSectionMatrix", transform.worldToLocalMatrix * targetObject.transform.localToWorldMatrix);
+            
+            Material mat2 = spot.meshRenderer.sharedMaterial;
+
+            mat2.EnableKeyword("CUTOUT_PLANE");
+            mat2.SetMatrix("_CrossSectionMatrix", transform.worldToLocalMatrix * targetObject.transform.localToWorldMatrix);
         }
     }
 }

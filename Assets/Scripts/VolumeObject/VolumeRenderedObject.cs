@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace UnityVolumeRendering
 {
@@ -13,7 +14,6 @@ namespace UnityVolumeRendering
 
         [HideInInspector]
         public VolumeDataset dataset;
-        
 
         [HideInInspector]
         public MeshRenderer meshRenderer;
@@ -154,13 +154,14 @@ namespace UnityVolumeRendering
             UpdateMaaterialProperties();
             CreateAxisPlanes();
         }
+
         private void CreateAxisPlanes()
         {
                     
                     for (int i = 0; i < 3; i++)
                     {
                         SlicingPlane slice = CreateSlicingPlane(Quaternion.Euler(angles4Planes[i]));
-                        slice.MainAxis=i;
+                        slice.MainAxis = i;
                         slice.gameObject.GetComponent<MeshRenderer>().enabled=false;
                     }
         }
