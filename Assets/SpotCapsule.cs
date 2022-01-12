@@ -7,6 +7,7 @@ public class SpotCapsule : MonoBehaviour
 {
     Renderer rend;
     public MeshRenderer meshRenderer;
+    private bool isSet;
     void Start()
     {
         rend = GetComponent<Renderer>();
@@ -19,8 +20,14 @@ public class SpotCapsule : MonoBehaviour
 
     }
 
+    public bool GetMode()
+    {
+        return isSet;
+    }
+
     public void SetActive(bool isActive)
     {
+        isSet = isActive;
         rend.enabled = isActive;
     }
     

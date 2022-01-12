@@ -34,11 +34,6 @@ namespace UnityVolumeRendering
 
             mat.EnableKeyword("CUTOUT_PLANE");
             mat.SetMatrix("_CrossSectionMatrix", transform.worldToLocalMatrix * targetObject.transform.localToWorldMatrix);
-            
-            Material mat2 = spot.meshRenderer.sharedMaterial;
-
-            mat2.EnableKeyword("CUTOUT_PLANE");
-            mat2.SetMatrix("_CrossSectionMatrix", transform.worldToLocalMatrix * targetObject.transform.localToWorldMatrix);
         }
     }
 }
