@@ -106,6 +106,11 @@ namespace UnityVolumeRendering
                 GameObject.DestroyImmediate(planeToRemove.gameObject);
             }
 
+            if (GUI.Button(new Rect(360.0f, bgRect.y + bgRect.height + 20.0f, 150.0f, 30.0f), "Set Spots to Robot"))
+            {
+                Debug.Log("OK");
+            }
+
             // Show hint
             if (spawnedPlanes.Length > 0)
                 GUI.Label(new Rect(0.0f, bgRect.y + bgRect.height + 60.0f, 450.0f, 30.0f), "Move plane by left clicking in the above view and dragging the mouse,\n or simply move it in the object hierarchy.");

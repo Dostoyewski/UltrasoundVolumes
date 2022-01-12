@@ -15,7 +15,8 @@ namespace UnityVolumeRendering
     /// </summary>
     public class RuntimeGUI : MonoBehaviour
     {
-        bool isRenderingSlices=false;
+        bool isRenderingSlices = false;
+        private bool isSelectingSpotes = true;
         private void OnGUI()
         {
             GUILayout.BeginVertical();
@@ -83,6 +84,14 @@ namespace UnityVolumeRendering
                 {
                     item.isRendering = !item.isRendering;
                 }
+            }
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Select spotes") )
+            {
+                var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
+                objects.transform.rotation = Quaternion.Euler(90f, 90f, 90f);
+                objects.transform.position = new Vector3(0f, 0f, 0f);
+                var spot = GameObject.FindObjectOfType<SpotCapsule>();
+                spot.transform.SetParent(objects.transform);
             }
 
             if ( GUILayout.Button("Exit"))
