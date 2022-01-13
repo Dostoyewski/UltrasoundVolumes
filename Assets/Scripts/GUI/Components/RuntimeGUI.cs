@@ -98,7 +98,12 @@ namespace UnityVolumeRendering
 
                 var r1 = spot.GetMeshSize();
             }
-
+            if (isSelectingSpotes && GUILayout.Button("Spots selector settings"))
+            {
+                EditSpotsGUI.ShowWindow(GameObject.FindObjectOfType<SpotCapsule>());
+                var transCont = GameObject.FindObjectOfType<TransformController>();
+                transCont.DisableRotation();
+            }
             if ( GUILayout.Button("Exit"))
             {
                 Application.Quit();

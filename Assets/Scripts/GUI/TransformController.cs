@@ -12,6 +12,7 @@ namespace UnityVolumeRendering
         static readonly string kMouseX = "Mouse X";
         static readonly string kMouseY = "Mouse Y";
         static readonly string kMouseScroll = "Mouse ScrollWheel";
+        private SpotCapsule spot;
 
         [SerializeField, Range(1f, 10f)] protected float zoomSpeed = 7.5f, zoomDelta = 5f;
         [SerializeField, Range(1f, 15f)] protected float zoomMin = 5f, zoomMax = 15f;
@@ -20,15 +21,16 @@ namespace UnityVolumeRendering
         private float scaleX = 1f;
         private float scaleY = 1f;
         private float scaleZ = 1f;
-        private float spotScaleY = 0.05f;
-        private float spotScale = 1f;
+        
         private float posX = 0f;
         private float posY = 0f;
         private float posZ = 0f;
         private float scaleStep = 0.0007f;
-        private float spotScaleStep = 0.5f;
+        
         private float moveStep = 0.007f;
         private float currentDir = 0f;
+
+        private bool disableRot = false;
 
         protected Camera cam;
         protected Vector3 targetCamPosition;
@@ -39,6 +41,17 @@ namespace UnityVolumeRendering
             cam = Camera.main;
             targetCamPosition = cam.transform.position;
             targetRotation = transform.rotation;
+            spot = GameObject.FindObjectOfType<SpotCapsule>();
+        }
+
+        public void DisableRotation()
+        {
+            disableRot = true;
+        }
+        
+        public void EnableRotation()
+        {
+            disableRot = false;
         }
         
         protected void Update () {
@@ -46,7 +59,7 @@ namespace UnityVolumeRendering
             var dt = Time.deltaTime;
             this.targetObject = GameObject.FindObjectOfType<VolumeRenderedObject>();
             Zoom(dt);
-            Rotate(dt);
+            if (!disableRot) Rotate(dt);
             MoveCross(dt);
             UpdateScaling(dt);
             UpdateCubePosition(dt);
@@ -65,11 +78,6 @@ namespace UnityVolumeRendering
         {
             var box = GameObject.FindObjectOfType<CutoutBox>();
             var plane = GameObject.FindObjectOfType<CrossSectionPlane>();
-            var spot = GameObject.FindObjectOfType<SpotCapsule>();
-            if (spot.GetMode())
-            {
-                spot.transform.localScale = new Vector3(spotScale, spotScaleY, spotScale);
-            }
             if (box != null)
             {
                 box.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
@@ -135,7 +143,6 @@ namespace UnityVolumeRendering
         protected void UpdateScaling(float dt)
         {
             var delta1 = scaleStep * dt;
-            var delta2 = spotScaleStep * dt;
             if (Input.GetKey(KeyCode.Q) && scaleX < 1)
             {
                 scaleX += delta1;
@@ -160,15 +167,13 @@ namespace UnityVolumeRendering
             {
                 scaleZ -= delta1;
             }
-            if (Input.GetKey(KeyCode.Alpha2) && spotScale < 1)
+            if (Input.GetKey(KeyCode.Alpha2))
             {
-                spotScale += delta2;
-                Debug.Log(spotScale);
+                spot.IncreaseRadius(dt);
             }
-            if (Input.GetKey(KeyCode.Alpha1) && spotScale > 0)
+            if (Input.GetKey(KeyCode.Alpha1))
             {
-                spotScale -= delta2;
-                Debug.Log(spotScale);
+                spot.DecreaseRadius(dt);
             }
         }
 
