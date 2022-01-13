@@ -17,6 +17,11 @@ namespace UnityVolumeRendering
     {
         bool isRenderingSlices = false;
         private bool isSelectingSpotes = false;
+
+        public void SpotsMode(bool state)
+        {
+            isSelectingSpotes = state;
+        }
         private void OnGUI()
         {
             GUILayout.BeginVertical();

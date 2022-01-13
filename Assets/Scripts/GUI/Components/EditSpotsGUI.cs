@@ -58,6 +58,7 @@ namespace UnityVolumeRendering
             {
                 // Render mode
                 GUILayout.Label("Render mode");
+                selectedRenderModeIndex = targetObject.GetRenderMode();
                 selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Circle view", "Cutout Internal", "Cutout External" }, 2);
                 targetObject.SetRenderMode(selectedRenderModeIndex);
 
@@ -89,6 +90,8 @@ namespace UnityVolumeRendering
                 if(GUILayout.Button("Send spots to robot", GUILayout.Width(200.0f)))
                 {
                     instance.Close();
+                    targetObject.SetActive(false);
+                    targetObject.SetRenderMode(0);
                 }
             }
 
@@ -100,6 +103,13 @@ namespace UnityVolumeRendering
             if (GUILayout.Button("Close"))
             {
                 instance.Close();
+            }
+            if (GUILayout.Button("Disable Spots"))
+            {
+                instance.Close();
+                targetObject.SetActive(false);
+                var rGUI = GameObject.FindObjectOfType<RuntimeGUI>();
+                if (rGUI != null) rGUI.SpotsMode(false);
             }
             GUILayout.EndHorizontal();
 

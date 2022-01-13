@@ -45,6 +45,21 @@ namespace UnityVolumeRendering
         mode = renderMode;
         if (mode == 1) cutoutType = CutoutType.Inclusive;
         else if (mode == 2) cutoutType = CutoutType.Exclusive;
+        else if (mode == 0) OnDisableCutout();
+    }
+
+    public int GetRenderMode()
+    {
+        return mode;
+    }
+    
+    private void OnDisableCutout()
+    {
+        if (targetObject != null)
+        {
+            targetObject.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_BOX_INCL");
+            targetObject.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_BOX_EXCL");
+        }
     }
     
     private void Cutout()
