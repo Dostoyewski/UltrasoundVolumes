@@ -100,9 +100,12 @@ namespace UnityVolumeRendering
             }
             if (isSelectingSpotes && GUILayout.Button("Spots selector settings"))
             {
-                EditSpotsGUI.ShowWindow(GameObject.FindObjectOfType<SpotCapsule>());
+                var spots = GameObject.FindObjectOfType<SpotCapsule>();
+                EditSpotsGUI.ShowWindow(spots);
                 var transCont = GameObject.FindObjectOfType<TransformController>();
                 transCont.DisableRotation();
+                var target = GameObject.FindObjectOfType<VolumeRenderedObject>();
+                spots.targetObject = target;
             }
             if ( GUILayout.Button("Exit"))
             {

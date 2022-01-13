@@ -14,14 +14,11 @@ namespace UnityVolumeRendering
         /// </summary>
         public VolumeRenderedObject targetObject;
 
-        public SpotCapsule spot;
-
         private void OnDisable()
         {
             if (targetObject != null)
             {
                 targetObject.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_PLANE");
-                spot.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_PLANE");
             }
         }
 

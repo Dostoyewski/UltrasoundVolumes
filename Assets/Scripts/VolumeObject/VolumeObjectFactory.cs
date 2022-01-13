@@ -58,7 +58,6 @@ namespace UnityVolumeRendering
             CrossSectionPlane csplane = quad.gameObject.GetComponent<CrossSectionPlane>();
             var spot = GameObject.FindObjectOfType<SpotCapsule>();
             csplane.targetObject = volobj;
-            csplane.spot = spot;
             quad.transform.position = volobj.transform.position;
 
 #if UNITY_EDITOR

@@ -58,8 +58,8 @@ namespace UnityVolumeRendering
             {
                 // Render mode
                 GUILayout.Label("Render mode");
-                selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Direct volume rendering", "Maximum intensity projection", "Isosurface rendering" }, 2);
-                // targetObject.SetRenderMode((RenderMode)selectedRenderModeIndex);
+                selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Circle view", "Cutout Internal", "Cutout External" }, 2);
+                targetObject.SetRenderMode(selectedRenderModeIndex);
 
                 // Visibility window
                 GUILayout.Label("Selector minimum and maximum radius");
@@ -70,23 +70,25 @@ namespace UnityVolumeRendering
                 targetObject.SetMaxRadius(GUILayout.HorizontalSlider(targetObject.GetMaxRadius(), 0f, 1.0f, GUILayout.Width(150.0f)));
                 GUILayout.EndHorizontal();
                 
-                
-                if(GUILayout.Button("Build transfer function", GUILayout.Width(200.0f)))
+                GUILayout.BeginHorizontal();
+                if(GUILayout.Button("Increase Level", GUILayout.Width(200.0f)))
                 {
-                    // TransferFunction tf = TransferFunctionDatabase.CreateTransferFunction();
-                    // targetObject.transferFunction = tf;
+                    targetObject.NextLevel();
                 }
+
+                GUILayout.Label("Current level: ");
+                GUILayout.Label(targetObject.GetCurrentLevel().ToString());
+                GUILayout.EndHorizontal();
                 
-                if(GUILayout.Button("Load default transfer function", GUILayout.Width(200.0f)))
+                if(GUILayout.Button("Decrease level", GUILayout.Width(200.0f)))
                 {
-                    // TransferFunction tf = TransferFunctionDatabase.CreateDefaultTransferFunction();
-                    // targetObject.transferFunction = tf;
+                    targetObject.PrevLevel();
                 }
 
                 // Load transfer function
-                if(GUILayout.Button("Load transfer function", GUILayout.Width(200.0f)))
+                if(GUILayout.Button("Send spots to robot", GUILayout.Width(200.0f)))
                 {
-                    // RuntimeFileBrowser.ShowOpenFileDialog(OnLoadTransferFunction);
+                    instance.Close();
                 }
             }
 
@@ -97,13 +99,18 @@ namespace UnityVolumeRendering
             // Show close button
             if (GUILayout.Button("Close"))
             {
-                GameObject.Destroy(this.gameObject);
-                var transCont = GameObject.FindObjectOfType<TransformController>();
-                transCont.EnableRotation();
+                instance.Close();
             }
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
+        }
+
+        private void Close()
+        {
+            GameObject.Destroy(this.gameObject);
+            var transCont = GameObject.FindObjectOfType<TransformController>();
+            transCont.EnableRotation();
         }
     }
 }
