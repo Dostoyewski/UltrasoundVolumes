@@ -52,6 +52,11 @@ namespace UnityVolumeRendering
     {
         return mode;
     }
+
+    public float GetHeight()
+    {
+        return spotMaxScaleY;
+    }
     
     private void OnDisableCutout()
     {

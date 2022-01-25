@@ -92,6 +92,8 @@ namespace UnityVolumeRendering
                     instance.Close();
                     targetObject.SetActive(false);
                     targetObject.SetRenderMode(0);
+                    var writer = GameObject.FindObjectOfType<RobotWriter>();
+                    writer.WriteSpotsFile();
                 }
             }
 
