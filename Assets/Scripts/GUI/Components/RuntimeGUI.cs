@@ -112,6 +112,10 @@ namespace UnityVolumeRendering
                 var target = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 spots.targetObject = target;
             }
+            if (GUILayout.Button("Output directory path"))
+            {
+                RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRobotPathResult);
+            }
             if ( GUILayout.Button("Exit"))
             {
                 Application.Quit();
@@ -187,6 +191,15 @@ namespace UnityVolumeRendering
                 {
                     VolumeObjectFactory.CreateObject(dataset);
                 }
+            }
+        }
+
+        private void OnRobotPathResult(RuntimeFileBrowser.DialogResult result)
+        {
+            if (!result.cancelled)
+            {
+                var writer = GameObject.FindObjectOfType<RobotWriter>();
+                writer.Path = result.path;
             }
         }
 
