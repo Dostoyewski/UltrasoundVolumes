@@ -57,13 +57,13 @@ namespace UnityVolumeRendering
             if(targetObject != null)
             {
                 // Render mode
-                GUILayout.Label("Render mode");
+                GUILayout.Label("Режим отображения");
                 selectedRenderModeIndex = targetObject.GetRenderMode();
-                selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Circle view", "Cutout Internal", "Cutout External" }, 2);
+                selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Рамка", "Обрезка внутренняя", "Обрезка наружняя" }, 2);
                 targetObject.SetRenderMode(selectedRenderModeIndex);
 
                 // Visibility window
-                GUILayout.Label("Selector minimum and maximum radius");
+                GUILayout.Label("Минимальный и максимальный радиус селектора");
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("min:");
                 targetObject.SetMinRadius(GUILayout.HorizontalSlider(targetObject.GetMinRadius(), 0f, 1.0f, GUILayout.Width(150.0f)));
@@ -72,7 +72,7 @@ namespace UnityVolumeRendering
                 GUILayout.EndHorizontal();
                 
                 GUILayout.BeginHorizontal();
-                if(GUILayout.Button("Increase Level", GUILayout.Width(200.0f)))
+                if(GUILayout.Button("Опустить селектор", GUILayout.Width(200.0f)))
                 {
                     targetObject.NextLevel();
                 }
@@ -81,13 +81,13 @@ namespace UnityVolumeRendering
                 GUILayout.Label(targetObject.GetCurrentLevel().ToString());
                 GUILayout.EndHorizontal();
                 
-                if(GUILayout.Button("Decrease level", GUILayout.Width(200.0f)))
+                if(GUILayout.Button("Поднять селектор", GUILayout.Width(200.0f)))
                 {
                     targetObject.PrevLevel();
                 }
 
                 // Load transfer function
-                if(GUILayout.Button("Send spots to robot", GUILayout.Width(200.0f)))
+                if(GUILayout.Button("Отправить споты на отжиг", GUILayout.Width(200.0f)))
                 {
                     instance.Close();
                     targetObject.SetActive(false);

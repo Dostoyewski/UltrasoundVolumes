@@ -24,35 +24,35 @@ namespace UnityVolumeRendering
         }
         private void OnGUI()
         {
-            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
             
-			if (GUILayout.Button("Загрузить радиальную секвенцию"))
+			if (GameObject.FindObjectOfType<VolumeRenderedObject>() == null && GUILayout.Button("Загрузить радиальную секвенцию"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRadialSequenceResult);
             }
-            if (GUILayout.Button("Загрузить линейную секвенцию"))
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() == null && GUILayout.Button("Загрузить линейную секвенцию"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnLinearSequenceResult);
             }
 
-            if (  GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Удалить скан"))
+            if ( GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Удалить скан"))
             {
                 this.DespawnAllDatasets();
                 this.DespawnAllCrossPlanes();
                 this.DespawnBoxes();
             }
             
-            if ( GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Despawn cutout Box") )
-            {
-                this.DespawnBoxes();
-            }
+            // if ( GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Despawn cutout Box") )
+            // {
+            //     this.DespawnBoxes();
+            // }
             
-            if (GameObject.FindObjectOfType<CrossSectionPlane>() != null && GUILayout.Button("Despawn scalpels") )
+            if (GameObject.FindObjectOfType<CrossSectionPlane>() != null && GUILayout.Button("Удалить скальпель") )
             {
                 DespawnAllCrossPlanes();
             }
             
-            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Scalpel") )
+            if (GameObject.FindObjectOfType<CrossSectionPlane>() == null && GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Скальпель") )
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 VolumeObjectFactory.SpawnCrossSectionPlane(objects);
@@ -61,26 +61,26 @@ namespace UnityVolumeRendering
                 plane.transform.SetParent(objects.transform);
             }
 
-            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Cutout Box") )
-            {
-                var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
-                VolumeObjectFactory.SpawnCutoutBox(objects);
-				objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                var box = GameObject.FindObjectOfType<CutoutBox>();
-                box.transform.SetParent(objects.transform);
-            }
+            // if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Cutout Box") )
+            // {
+                // var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
+                // VolumeObjectFactory.SpawnCutoutBox(objects);
+				// objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                // var box = GameObject.FindObjectOfType<CutoutBox>();
+                // box.transform.SetParent(objects.transform);
+            // }
 
             // Show button for opening the dataset editor (for changing the visualisation)
-            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Edit imported dataset"))
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Редактировать скан"))
             {
                 EditVolumeGUI.ShowWindow(GameObject.FindObjectOfType<VolumeRenderedObject>());
             }
 
-            if (GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Edit cutout box"))
-            {
-                EditCutGUI.ShowWindow(GameObject.FindObjectOfType<CutoutBox>());
-            }
-            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Show slices") )
+            // if (GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Edit cutout box"))
+            // {
+            //     EditCutGUI.ShowWindow(GameObject.FindObjectOfType<CutoutBox>());
+            // }
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Показать разрезы") )
             {
                 isRenderingSlices = !isRenderingSlices;
                 FindObjectOfType<Camera>().rect = isRenderingSlices? (new Rect(0,0.5f,0.5f,0.5f)):(new Rect(0,0,1.0f,1.0f));
@@ -90,7 +90,7 @@ namespace UnityVolumeRendering
                     item.isRendering = !item.isRendering;
                 }
             }
-            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Select spotes") )
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Выбрать споты") )
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -103,7 +103,7 @@ namespace UnityVolumeRendering
 
                 var r1 = spot.GetMeshSize();
             }
-            if (isSelectingSpotes && GUILayout.Button("Spots selector settings"))
+            if (isSelectingSpotes && GUILayout.Button("Настройки выбора спотов"))
             {
                 var spots = GameObject.FindObjectOfType<SpotCapsule>();
                 EditSpotsGUI.ShowWindow(spots);
@@ -112,15 +112,15 @@ namespace UnityVolumeRendering
                 var target = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 spots.targetObject = target;
             }
-            if (GUILayout.Button("Output directory path"))
+            if (GUILayout.Button("Путь выходного файла"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRobotPathResult);
             }
-            if ( GUILayout.Button("Exit"))
+            if ( GUILayout.Button("Выход"))
             {
                 Application.Quit();
             }
-            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
         }
 
         private void OnOpenRAWDatasetResult(RuntimeFileBrowser.DialogResult result)
