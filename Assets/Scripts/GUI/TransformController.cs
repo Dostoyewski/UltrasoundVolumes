@@ -21,7 +21,9 @@ namespace UnityVolumeRendering
         private float scaleX = 1f;
         private float scaleY = 1f;
         private float scaleZ = 1f;
-        
+
+        private bool fixRight = false;
+
         private float posX = 0f;
         private float posY = 0f;
         private float posZ = 0f;
@@ -29,6 +31,7 @@ namespace UnityVolumeRendering
         
         private float moveStep = 0.7f;
         private float currentDir = 0f;
+        private float rotAngle = 0f;
 
         private bool disableRot = false;
 
@@ -90,10 +93,11 @@ namespace UnityVolumeRendering
                 if (currentDir == 0)
                 {
                     plane.transform.localRotation = Quaternion.Euler(90, 0, 0);
+                    rotAngle = 0;
                 }
                 else if (currentDir == 1)
                 {
-                    plane.transform.localRotation = Quaternion.Euler(0, 90, 0);
+                    plane.transform.localRotation = Quaternion.Euler(rotAngle, 90, 0);
                 }
                 else if (currentDir == 2)
                 {
@@ -137,6 +141,11 @@ namespace UnityVolumeRendering
                     currentDir = 0;
                 }
                 else currentDir += 1;
+            }
+
+            if (Input.GetKey(KeyCode.Tab))
+            {
+                rotAngle += (float) (15 * dt);
             }
         }
 
@@ -189,6 +198,11 @@ namespace UnityVolumeRendering
             // cam.transform.position = Vector3.Lerp(cam.transform.position, targetCamPosition, dt * zoomDelta);
         }
 
+        public void FixRightAxisRotation(bool status)
+        {
+            fixRight = status;
+        }
+
         protected void Rotate(float dt)
         {
             if (Input.GetMouseButton(0))
@@ -199,8 +213,11 @@ namespace UnityVolumeRendering
                 var up = transform.InverseTransformDirection(cam.transform.up);
                 targetRotation *= Quaternion.AngleAxis(-mouseX, up);
 
-                var right = transform.InverseTransformDirection(cam.transform.right);
-                targetRotation *= Quaternion.AngleAxis(mouseY, right);
+                if (!fixRight)
+                {
+                    var right = transform.InverseTransformDirection(cam.transform.right);
+                    targetRotation *= Quaternion.AngleAxis(mouseY, right);
+                }
             }
 
             if (targetObject != null)

@@ -17,6 +17,7 @@ namespace UnityVolumeRendering
     {
         bool isRenderingSlices = false;
         private bool isSelectingSpotes = false;
+        private bool fixAxe = false;
 
         public void SpotsMode(bool state)
         {
@@ -115,6 +116,12 @@ namespace UnityVolumeRendering
             if (GUILayout.Button("Путь выходного файла"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRobotPathResult);
+            }
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Фиксация верт. оси"))
+            {
+                fixAxe = !fixAxe;
+                var controller = GameObject.FindObjectOfType<TransformController>();
+                controller.FixRightAxisRotation(fixAxe);
             }
             if ( GUILayout.Button("Выход"))
             {
