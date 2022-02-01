@@ -26,16 +26,16 @@ namespace UnityVolumeRendering
         {
             GUILayout.BeginVertical();
             
-			if (GUILayout.Button("Import Radial sequence"))
+			if (GUILayout.Button("Загрузить радиальную секвенцию"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRadialSequenceResult);
             }
-            if (GUILayout.Button("Import Linear sequence"))
+            if (GUILayout.Button("Загрузить линейную секвенцию"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnLinearSequenceResult);
             }
 
-            if (  GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Despawn dataset"))
+            if (  GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Удалить скан"))
             {
                 this.DespawnAllDatasets();
                 this.DespawnAllCrossPlanes();
