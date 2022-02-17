@@ -40,6 +40,16 @@ namespace UnityVolumeRendering
         }
     }
 
+    public float GetScale()
+    {
+        return spotScale;
+    }
+    
+    public float GetScaleY()
+    {
+        return spotScaleY;
+    }
+
     public void SetRenderMode(int renderMode)
     {
         mode = renderMode;

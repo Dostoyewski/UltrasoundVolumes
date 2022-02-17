@@ -9,7 +9,10 @@ Shader "VolumeRendering/SliceRenderingShader"
     }
     SubShader
     {
-        Tags { "Queue" = "Transparent" }
+        Tags
+        {
+            "Queue" = "Transparent"
+        }
         LOD 100
         Cull Off
 
@@ -70,9 +73,33 @@ Shader "VolumeRendering/SliceRenderingShader"
                 {
                    return float4(0.0f, 0.0f, 0.0f, 1.0f);
                 }
-                if (_Spotes == 1 && dataCoord.x > 0.35f && dataCoord.y > 0.35f && dataCoord.z > 0.35f && dataCoord.x < 0.4f && dataCoord.y < 0.4f && dataCoord.z < 0.4f)
+                if (_Spotes == 1 && dataCoord.x > 0.5 - 0.5 * _ScaleZ && dataCoord.y > - 0.5 * _ScaleZ + 0.5
+                    && dataCoord.z > _PosZ + 0.5 - 0.5 * _ScaleY
+                    && dataCoord.x < 0.5 * _ScaleZ + 0.5 && dataCoord.y < 0.5 * _ScaleZ + 0.5 &&
+                    dataCoord.z < _PosZ + 0.5 * _ScaleY + 0.5)
                 {
-                   return float4(0.0f, 0.0f, 1.0f, 0.0f);
+                    if ((dataCoord.x > 0.5 - 0.5 * _ScaleZ && dataCoord.x < 0.5 - 0.5 * _ScaleZ + 0.005) ||
+                        (dataCoord.x < 0.5 * _ScaleZ + 0.5 && dataCoord.x > 0.5 * _ScaleZ + 0.5 - 0.005))
+                    {
+                        return float4(0.0f, 1.0f, 0.0f, 0.0f);                        
+                    }
+                    else if((dataCoord.y > 0.5 * -_ScaleZ + 0.5 && dataCoord.y < 0.5 - 0.5 * _ScaleZ + 0.005) ||
+                            (dataCoord.y < 0.5 * _ScaleZ + 0.5 && dataCoord.y > 0.5 * _ScaleZ + 0.5 - 0.005))
+                    {
+                        return float4(0.0f, 1.0f, 0.0f, 0.0f);
+                    }
+                    else if((dataCoord.z > _PosZ - 0.5 * _ScaleY + 0.5 && dataCoord.z < _PosZ - 0.5 * _ScaleY + 0.5 + 0.005) ||
+                            (dataCoord.z < _PosZ + 0.5 * _ScaleY + 0.5 && dataCoord.z > _PosZ + 0.5 * _ScaleY + 0.5 - 0.005))
+                    {
+                        return float4(0.0f, 1.0f, 0.0f, 0.0f);
+                    }
+                    else
+                    {
+                        float dataVal = tex3D(_DataTex, dataCoord);
+                        float4 col = tex2D(_TFTex, float2(dataVal, 0.0f));
+                        col.a = 1.0f;
+                        return col;
+                    }
                 }
                 else
                 {

@@ -34,6 +34,10 @@ namespace UnityVolumeRendering
             meshRenderer.sharedMaterial.SetMatrix("_parentInverseMat", transform.parent.worldToLocalMatrix);
             meshRenderer.sharedMaterial.SetMatrix("_planeMat", Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one)); // TODO: allow changing scale
             meshRenderer.sharedMaterial.SetFloat("_Spotes", System.Convert.ToSingle(spot.GetMode()));
+            meshRenderer.sharedMaterial.SetFloat("_PosZ", (float) (spot.GetCurrentLevel() / 10));
+            meshRenderer.sharedMaterial.SetFloat("_ScaleX",  spot.GetScale());
+            meshRenderer.sharedMaterial.SetFloat("_ScaleY",  spot.GetScaleY());
+            meshRenderer.sharedMaterial.SetFloat("_ScaleZ",  spot.GetScale());
         }
         void OnGUI ()
         {
