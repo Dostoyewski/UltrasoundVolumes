@@ -41,6 +41,14 @@ Shader "VolumeRendering/SliceRenderingShader"
             // Plane transform
             uniform float4x4 _planeMat;
 
+            float _PosX;
+            float _PosY;
+            float _PosZ;
+            float _ScaleX;
+            float _ScaleY;
+            float _ScaleZ;
+            float _Spotes = 0;
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -61,6 +69,10 @@ Shader "VolumeRendering/SliceRenderingShader"
                 if (dataCoord.x > 1.0f || dataCoord.y > 1.0f || dataCoord.z > 1.0f || dataCoord.x < 0.0f || dataCoord.y < 0.0f || dataCoord.z < 0.0f)
                 {
                    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+                }
+                if (_Spotes == 1 && dataCoord.x > 0.35f && dataCoord.y > 0.35f && dataCoord.z > 0.35f && dataCoord.x < 0.4f && dataCoord.y < 0.4f && dataCoord.z < 0.4f)
+                {
+                   return float4(0.0f, 0.0f, 1.0f, 0.0f);
                 }
                 else
                 {
