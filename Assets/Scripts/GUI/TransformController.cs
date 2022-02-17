@@ -191,7 +191,7 @@ namespace UnityVolumeRendering
             var amount = Input.GetAxis(kMouseScroll);
             if(Mathf.Abs(amount) > 0f)
             {
-                targetCamPosition += cam.transform.forward * zoomSpeed * amount;
+                targetCamPosition += (cam.transform.forward * zoomSpeed - cam.transform.up * 0 * zoomSpeed) * amount;
                 targetCamPosition = targetCamPosition.normalized * Mathf.Clamp(targetCamPosition.magnitude, zoomMin, zoomMax);
             }
             //TODO: fix scaling
