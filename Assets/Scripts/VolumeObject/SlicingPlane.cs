@@ -10,27 +10,42 @@ namespace UnityVolumeRendering
         public Material mat;
         Texture texture;
         private SpotCapsule spot;
-        private Rect[] bgRects=new Rect[3];
-        public int MainAxis=-1;
+        private Rect[] bgRects = new Rect[3];
+        public int MainAxis = -1;
         private float[,] coord4rects={{0.0f, Screen.height/2},{Screen.width/2, Screen.height/2},{Screen.width/2, 0.0f}} ;
         private Vector2 prevMousePos=new Vector2();
         public bool isRendering;
+        private VolumeRenderedObject volume = null;
         
         private void Start()
         {
             isRendering = false;
+            volume = GameObject.FindObjectOfType<VolumeRenderedObject>();
             spot = GameObject.FindObjectOfType<SpotCapsule>();
             meshRenderer = GetComponent<MeshRenderer>();
             //bgRect = new Rect(0.0f, Screen.height/2, Screen.width/2, Screen.height/2);
             for (int i = 0; i < 3; i++)
             {
-                bgRects[i]=new Rect(coord4rects[i,0], coord4rects[i,1], Screen.width/2, Screen.height/2);
+                bgRects[i] = new Rect(coord4rects[i,0], coord4rects[i,1], Screen.width/2, Screen.height/2);
             }
             //AxisScales={transform.parent.lossyScale};
         }
 
         private void Update()
         {
+            var angles = transform.parent.eulerAngles;
+            if (MainAxis == 0)
+            {
+                transform.rotation = Quaternion.Euler(angles.x, angles.y, 0);
+            }
+            else if (MainAxis == 1)
+            {
+                transform.position = new Vector3(0, (float) -spot.GetCurrentLevel() / 10, 0);
+            }
+            else if (MainAxis == 2)
+            {
+                transform.rotation = Quaternion.Euler(angles.x, angles.y, 90);
+            }
             meshRenderer.sharedMaterial.SetMatrix("_parentInverseMat", transform.parent.worldToLocalMatrix);
             meshRenderer.sharedMaterial.SetMatrix("_planeMat", Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one)); // TODO: allow changing scale
             meshRenderer.sharedMaterial.SetFloat("_Spotes", System.Convert.ToSingle(spot.GetMode()));
@@ -39,6 +54,7 @@ namespace UnityVolumeRendering
             meshRenderer.sharedMaterial.SetFloat("_ScaleY",  spot.GetScaleY());
             meshRenderer.sharedMaterial.SetFloat("_ScaleZ",  spot.GetScale());
         }
+        
         void OnGUI ()
         {
             if (isRendering)

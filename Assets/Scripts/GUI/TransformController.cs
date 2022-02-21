@@ -201,6 +201,10 @@ namespace UnityVolumeRendering
         public void FixRightAxisRotation(bool status)
         {
             fixRight = status;
+            if (fixRight)
+            {
+                targetObject.transform.Rotate(90, 0, 0);
+            }
         }
 
         protected void Rotate(float dt)
