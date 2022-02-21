@@ -38,7 +38,7 @@ namespace UnityVolumeRendering
             {
                 transform.rotation = Quaternion.Euler(angles.x, angles.y, 0);
             }
-            else if (MainAxis == 1)
+            else if (MainAxis == 1 && spot.GetMode())
             {
                 transform.position = new Vector3(0, (float) -spot.GetCurrentLevel() / 10, 0);
             }
