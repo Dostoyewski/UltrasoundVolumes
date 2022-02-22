@@ -12,6 +12,7 @@ namespace UnityVolumeRendering
     private bool isSet;
     private float spotScaleY = 0.05f;
     private float spotScaleStep = 0.5f;
+    private bool ablation = false;
     private float spotMaxScale = 0.5f;
     private float spotScale = 1f;
     private float spotMinScale = 0.1f;
@@ -75,6 +76,16 @@ namespace UnityVolumeRendering
             targetObject.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_BOX_INCL");
             targetObject.meshRenderer.sharedMaterial.DisableKeyword("CUTOUT_BOX_EXCL");
         }
+    }
+    
+    public bool GetAblation()
+    {
+        return ablation;
+    }
+    
+    public void SetAblation(bool status)
+    {
+        ablation = status;
     }
     
     private void Cutout()

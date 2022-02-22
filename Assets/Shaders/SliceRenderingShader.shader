@@ -51,6 +51,7 @@ Shader "VolumeRendering/SliceRenderingShader"
             float _ScaleY;
             float _ScaleZ;
             float _Spotes = 0;
+            float _Ablation = 0;
 
             v2f vert (appdata v)
             {
@@ -76,7 +77,7 @@ Shader "VolumeRendering/SliceRenderingShader"
                 if (_Spotes == 1 && dataCoord.x > 0.5 - 0.5 * _ScaleZ && dataCoord.y > - 0.5 * _ScaleZ + 0.5
                     && dataCoord.z > _PosZ + 0.5 - 0.5 * _ScaleY
                     && dataCoord.x < 0.5 * _ScaleZ + 0.5 && dataCoord.y < 0.5 * _ScaleZ + 0.5 &&
-                    dataCoord.z < _PosZ + 0.5 * _ScaleY + 0.5)
+                    dataCoord.z < _PosZ + 0.5 * _ScaleY + 0.5 && _Ablation == 0)
                 {
                     if ((dataCoord.x > 0.5 - 0.5 * _ScaleZ && dataCoord.x < 0.5 - 0.5 * _ScaleZ + 0.005) ||
                         (dataCoord.x < 0.5 * _ScaleZ + 0.5 && dataCoord.x > 0.5 * _ScaleZ + 0.5 - 0.005))
@@ -103,11 +104,21 @@ Shader "VolumeRendering/SliceRenderingShader"
                 }
                 else
                 {
-                   // Sample the volume texture.
-                   float dataVal = tex3D(_DataTex, dataCoord);
-                   float4 col = tex2D(_TFTex, float2(dataVal, 0.0f));
-                   col.a = 1.0f;
-                   return col;
+                   if (_Spotes == 1 && dataCoord.x > 0.5 - 0.5 * _ScaleZ && dataCoord.y > - 0.5 * _ScaleZ + 0.5
+                    && dataCoord.z > _PosZ + 0.5 - 0.5 * _ScaleY
+                    && dataCoord.x < 0.5 * _ScaleZ + 0.5 && dataCoord.y < 0.5 * _ScaleZ + 0.5 &&
+                    dataCoord.z < _PosZ + 0.5 * _ScaleY + 0.5 && _Ablation == 1)
+                   {
+                       return float4(0.0f, 0.0f, 0.0f, 1.0f);
+                   }
+                   else
+                   {
+                       // Sample the volume texture.
+                       float dataVal = tex3D(_DataTex, dataCoord);
+                       float4 col = tex2D(_TFTex, float2(dataVal, 0.0f));
+                       col.a = 1.0f;
+                       return col;                       
+                   }
                 }
             }
             ENDCG

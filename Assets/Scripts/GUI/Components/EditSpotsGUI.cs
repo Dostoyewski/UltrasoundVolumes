@@ -15,6 +15,7 @@ namespace UnityVolumeRendering
 
         private const int WINDOW_WIDTH = 400;
         private const int WINDOW_HEIGHT = 250;
+        private bool ablation = false;
 
         private int selectedRenderModeIndex = 0;
         private Vector3 rotation;
@@ -102,16 +103,21 @@ namespace UnityVolumeRendering
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             // Show close button
-            if (GUILayout.Button("Close"))
+            if (GUILayout.Button("Закрыть"))
             {
                 instance.Close();
             }
-            if (GUILayout.Button("Disable Spots"))
+            if (GUILayout.Button("Отключить селектор"))
             {
                 instance.Close();
                 targetObject.SetActive(false);
                 var rGUI = GameObject.FindObjectOfType<RuntimeGUI>();
                 if (rGUI != null) rGUI.SpotsMode(false);
+            }
+            if (GUILayout.Button("Тестовая абляция"))
+            {
+                ablation = !ablation;
+                targetObject.SetAblation(ablation);
             }
             GUILayout.EndHorizontal();
 

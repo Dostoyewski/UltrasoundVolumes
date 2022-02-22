@@ -53,6 +53,7 @@ namespace UnityVolumeRendering
             meshRenderer.sharedMaterial.SetFloat("_ScaleX",  spot.GetScale());
             meshRenderer.sharedMaterial.SetFloat("_ScaleY",  spot.GetScaleY());
             meshRenderer.sharedMaterial.SetFloat("_ScaleZ",  spot.GetScale());
+            meshRenderer.sharedMaterial.SetFloat("_Ablation",  System.Convert.ToSingle(spot.GetAblation()));
         }
         
         void OnGUI ()
