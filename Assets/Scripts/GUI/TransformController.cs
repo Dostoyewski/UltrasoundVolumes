@@ -39,6 +39,9 @@ namespace UnityVolumeRendering
         protected Vector3 targetCamPosition;
         protected Quaternion targetRotation;
         public VolumeRenderedObject targetObject;
+        
+        private bool once = true;
+        private int counter = 0;
 
         protected void Start () {
             cam = Camera.main;
@@ -203,7 +206,8 @@ namespace UnityVolumeRendering
             fixRight = status;
             if (fixRight)
             {
-                targetObject.transform.Rotate(90, 0, 0);
+                transform.rotation = Quaternion.Euler(90, 0, 0);
+                targetObject.transform.rotation = Quaternion.Euler(90, 0, 0);
             }
         }
 
@@ -222,7 +226,18 @@ namespace UnityVolumeRendering
                     var right = transform.InverseTransformDirection(cam.transform.right);
                     targetRotation *= Quaternion.AngleAxis(mouseY, right);
                 }
+                if (once)
+                {
+                    targetRotation = Quaternion.Euler(90, 0, 0);
+                    counter++;
+                    if (counter > 500)
+                    {
+                        once = false;
+                    }
+                }
             }
+            
+                
 
             if (targetObject != null)
             {
@@ -230,6 +245,7 @@ namespace UnityVolumeRendering
             }
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
         }
+        
 
     }
 
