@@ -77,6 +77,15 @@ namespace UnityVolumeRendering
                 EditVolumeGUI.ShowWindow(GameObject.FindObjectOfType<VolumeRenderedObject>());
             }
 
+            if (Input.GetKey(KeyCode.F1))
+            {
+                if (GameObject.FindObjectOfType<HelpGUI>() == null)
+                {
+                    HelpGUI.ShowWindow();
+                }
+            }
+            
+
             // if (GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Edit cutout box"))
             // {
             //     EditCutGUI.ShowWindow(GameObject.FindObjectOfType<CutoutBox>());
