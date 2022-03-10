@@ -11,11 +11,14 @@ namespace UnityVolumeRendering
 
         private const int WINDOW_WIDTH = 400;
         private const int WINDOW_HEIGHT = 250;
+        private bool ScalpelEnabled = false;
 
         private string help =
             "Для подгрузки секвенции нажмите кнопку `Загрузить секвенцию`" +
-            " и укажите путь до папки с файлами. Режим работы со скальпелем: перемещение осуществляется стрелочками, поворот осуществляется" +
-            " нажатием кнопки R. ";
+            " и укажите путь до папки с файлами.";
+        
+        private string ScalpelHelp = "Режим работы со скальпелем: перемещение осуществляется стрелочками, поворот осуществляется" +
+        " нажатием кнопки R. ";
         private static HelpGUI instance;
 
         private int windowID;
@@ -24,6 +27,11 @@ namespace UnityVolumeRendering
         {
             // Fetch a unique ID for our window (see GUI.Window)
             windowID = WindowGUID.GetUniqueWindowID();
+        }
+
+        public void SetScalpel(bool stats)
+        {
+            ScalpelEnabled = stats;
         }
 
         private void Start()
@@ -35,7 +43,7 @@ namespace UnityVolumeRendering
             if(instance != null)
                 GameObject.Destroy(instance);
 
-            GameObject obj = new GameObject($"Справка");
+            GameObject obj = new GameObject($"HelpGUI");
             instance = obj.AddComponent<HelpGUI>();
         }
 
@@ -51,7 +59,15 @@ namespace UnityVolumeRendering
 
             
             GUILayout.FlexibleSpace();
-            GUILayout.Label(help);
+            var runGui = GameObject.FindObjectOfType<RuntimeGUI>();
+            if (runGui.scalpel)
+            {
+                GUILayout.Label(ScalpelHelp);
+            }
+            else
+            {
+                GUILayout.Label(help);
+            }
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             // Show close button

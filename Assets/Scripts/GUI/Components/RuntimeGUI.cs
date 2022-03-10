@@ -18,6 +18,7 @@ namespace UnityVolumeRendering
         bool isRenderingSlices = false;
         private bool isSelectingSpotes = false;
         private bool fixAxe = false;
+        public bool scalpel = false;
 
         public void SpotsMode(bool state)
         {
@@ -51,15 +52,19 @@ namespace UnityVolumeRendering
             if (GameObject.FindObjectOfType<CrossSectionPlane>() != null && GUILayout.Button("Удалить скальпель") )
             {
                 DespawnAllCrossPlanes();
+                var gui = GameObject.FindObjectOfType<HelpGUI>();
+                scalpel = false;
             }
             
-            if (GameObject.FindObjectOfType<CrossSectionPlane>() == null && GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Скальпель") )
+            if (GameObject.FindObjectOfType<CrossSectionPlane>() == null && GameObject.FindObjectOfType<VolumeRenderedObject>() != null 
+                                                                         && GUILayout.Button("Скальпель") )
             {
                 var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 VolumeObjectFactory.SpawnCrossSectionPlane(objects);
                 objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
                 var plane = GameObject.FindObjectOfType<CrossSectionPlane>();
                 plane.transform.SetParent(objects.transform);
+                scalpel = true;
             }
 
             // if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Cutout Box") )
