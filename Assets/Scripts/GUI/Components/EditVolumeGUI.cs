@@ -105,6 +105,8 @@ namespace UnityVolumeRendering
             if (GUILayout.Button("Close"))
             {
                 GameObject.Destroy(this.gameObject);
+                var rGui = GameObject.FindObjectOfType<RuntimeGUI>();
+                rGui.isEditingDataset = false;
             }
             GUILayout.EndHorizontal();
 

@@ -15,8 +15,10 @@ namespace UnityVolumeRendering
     /// </summary>
     public class RuntimeGUI : MonoBehaviour
     {
-        bool isRenderingSlices = false;
-        private bool isSelectingSpotes = false;
+        public bool isRenderingSlices = false;
+        public bool isSelectingSpotes = false;
+
+        public bool isEditingDataset = false;
         private bool fixAxe = false;
         public bool scalpel = false;
 
@@ -80,6 +82,7 @@ namespace UnityVolumeRendering
             if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Редактировать скан"))
             {
                 EditVolumeGUI.ShowWindow(GameObject.FindObjectOfType<VolumeRenderedObject>());
+                isEditingDataset = true;
             }
 
             if (Input.GetKey(KeyCode.F1))
