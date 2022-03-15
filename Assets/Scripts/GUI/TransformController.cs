@@ -204,11 +204,6 @@ namespace UnityVolumeRendering
         public void FixRightAxisRotation(bool status)
         {
             fixRight = status;
-            if (fixRight)
-            {
-                transform.rotation = Quaternion.Euler(90, 0, 0);
-                targetObject.transform.rotation = Quaternion.Euler(90, 0, 0);
-            }
         }
 
         protected void Rotate(float dt)
@@ -218,19 +213,24 @@ namespace UnityVolumeRendering
                 var mouseX = Input.GetAxis(kMouseX) * rotateSpeed;
                 var mouseY = Input.GetAxis(kMouseY) * rotateSpeed;
 
-                var up = transform.InverseTransformDirection(cam.transform.up);
-                targetRotation *= Quaternion.AngleAxis(-mouseX, up);
-
                 if (!fixRight)
                 {
+                    var up = transform.InverseTransformDirection(cam.transform.up);
                     var right = transform.InverseTransformDirection(cam.transform.right);
                     targetRotation *= Quaternion.AngleAxis(mouseY, right);
+                    targetRotation *= Quaternion.AngleAxis(-mouseX, up);
+                }
+                else
+                {
+                    var up = Vector3.back;
+                    targetRotation *= Quaternion.AngleAxis(-mouseX, up);
                 }
                 if (once)
                 {
                     targetRotation = Quaternion.Euler(90, 0, 0);
+                    transform.rotation = targetRotation;
                     counter++;
-                    if (counter > 500)
+                    if (counter > 100)
                     {
                         once = false;
                     }
@@ -242,6 +242,10 @@ namespace UnityVolumeRendering
             if (targetObject != null)
             {
                 targetObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
+            }
+            else
+            {
+                once = true;
             }
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
         }
