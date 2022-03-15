@@ -230,10 +230,7 @@ namespace UnityVolumeRendering
                     targetRotation = Quaternion.Euler(90, 0, 0);
                     transform.rotation = targetRotation;
                     counter++;
-                    if (counter > 100)
-                    {
-                        once = false;
-                    }
+                    once = false;
                 }
             }
             
