@@ -46,9 +46,11 @@ Shader "VolumeRendering/SliceRenderingShader"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 // Calculate plane vertex world position.
-                float3 vert = mul(_planeMat, float4(0.5f -v.uv.x, 0.0f, 0.5f -v.uv.y, 1.0f));
+                //float3 vert = mul(_planeMat, float4(0.5f -v.uv.x, 0.0f, 0.5f -v.uv.y, 1.0f));
+                //float3 vert = mul(_planeMat, v.vertex);
                 // Convert from world space to volume space.
-                o.relVert = mul(_parentInverseMat, float4(vert, 1.0f));
+                //o.relVert = mul(_parentInverseMat, float4(vert, 1.0f));
+                o.relVert=mul(_planeMat,float4((0.5f -v.uv.x)*10, 0.0f, (0.5f -v.uv.y)*10, 1.0f));
                 o.uv = v.uv;
                 return o;
             }
@@ -70,6 +72,7 @@ Shader "VolumeRendering/SliceRenderingShader"
                    col.a = 1.0f;
                    return col;
                 }
+                
             }
             ENDCG
         }
