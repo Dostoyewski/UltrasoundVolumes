@@ -16,6 +16,7 @@ namespace UnityVolumeRendering
         private Vector2 prevMousePos=new Vector2();
         public bool isRendering;
         private VolumeRenderedObject volume = null;
+        private float prevAngleZ = 0;
         
         private void Start()
         {
@@ -33,7 +34,7 @@ namespace UnityVolumeRendering
 
         private void Update()
         {
-            var angles = transform.parent.eulerAngles;
+            var angles = volume.transform.eulerAngles;
             if (MainAxis == 0)
             {
                 transform.rotation = Quaternion.Euler(angles.x, angles.y, 0);
@@ -54,10 +55,12 @@ namespace UnityVolumeRendering
             meshRenderer.sharedMaterial.SetFloat("_ScaleY",  spot.GetScaleY());
             meshRenderer.sharedMaterial.SetFloat("_ScaleZ",  spot.GetScale());
             meshRenderer.sharedMaterial.SetFloat("_Ablation",  System.Convert.ToSingle(spot.GetAblation()));
+            
         }
         
         void OnGUI ()
         {
+            var angles = volume.transform.eulerAngles;
             if (isRendering)
             {
                 if (MainAxis > -1 && MainAxis < 3)
@@ -70,7 +73,9 @@ namespace UnityVolumeRendering
                 {
                     handleMouseMovement = true;
                     prevMousePos = Event.current.mousePosition;
-                    this.GetComponent<MeshRenderer>().enabled = true;
+                    // this.GetComponent<MeshRenderer>().enabled = true;
+                    var controller = GameObject.FindObjectOfType<TransformController>();
+                    controller.DisableRotation();
                 }
 
                     // Handle mouse movement (move the plane)
@@ -83,9 +88,20 @@ namespace UnityVolumeRendering
                             
                         prevMousePos = Event.current.mousePosition;
                     }
-                if (Event.current.type == EventType.MouseUp)
-                    handleMouseMovement = false;
-                    this.GetComponent<MeshRenderer>().enabled = false;
+
+                    if (Event.current.type == EventType.MouseUp)
+                    {
+                        handleMouseMovement = false;
+                        this.GetComponent<MeshRenderer>().enabled = false;
+                        var controller = GameObject.FindObjectOfType<TransformController>();
+                        controller.EnableRotation();
+                    }
+                }
+
+                if (Mathf.Abs(angles.z - prevAngleZ) > 2)
+                {
+                    transform.position = Vector3.zero;
+                    prevAngleZ = angles.z;
                 }
                 /*if (Event.current.type == EventType.MouseDrag && Event.current.button == 0)
                 {
