@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace UnityVolumeRendering
 {
@@ -15,8 +16,8 @@ namespace UnityVolumeRendering
         private float[,] coord4rects={{0.0f, Screen.height/2},{Screen.width/2, Screen.height/2},{Screen.width/2, 0.0f}} ;
         private Vector2 prevMousePos=new Vector2();
         public bool isRendering;
-        private VolumeRenderedObject volume = null;
         private float prevAngleZ = 0;
+        private VolumeRenderedObject volume = null;
         
         private void Start()
         {
@@ -55,12 +56,12 @@ namespace UnityVolumeRendering
             meshRenderer.sharedMaterial.SetFloat("_ScaleY",  spot.GetScaleY());
             meshRenderer.sharedMaterial.SetFloat("_ScaleZ",  spot.GetScale());
             meshRenderer.sharedMaterial.SetFloat("_Ablation",  System.Convert.ToSingle(spot.GetAblation()));
-            
         }
         
         void OnGUI ()
         {
             var angles = volume.transform.eulerAngles;
+            var controller = GameObject.FindObjectOfType<TransformController>();
             if (isRendering)
             {
                 if (MainAxis > -1 && MainAxis < 3)
@@ -74,7 +75,6 @@ namespace UnityVolumeRendering
                     handleMouseMovement = true;
                     prevMousePos = Event.current.mousePosition;
                     // this.GetComponent<MeshRenderer>().enabled = true;
-                    var controller = GameObject.FindObjectOfType<TransformController>();
                     controller.DisableRotation();
                 }
 
@@ -93,15 +93,14 @@ namespace UnityVolumeRendering
                     {
                         handleMouseMovement = false;
                         this.GetComponent<MeshRenderer>().enabled = false;
-                        var controller = GameObject.FindObjectOfType<TransformController>();
                         controller.EnableRotation();
                     }
                 }
 
-                if (Mathf.Abs(angles.z - prevAngleZ) > 2)
+                if (Math.Abs(angles.z - prevAngleZ) > 2)
                 {
-                    transform.position = Vector3.zero;
                     prevAngleZ = angles.z;
+                    transform.position = Vector3.zero;
                 }
                 /*if (Event.current.type == EventType.MouseDrag && Event.current.button == 0)
                 {
