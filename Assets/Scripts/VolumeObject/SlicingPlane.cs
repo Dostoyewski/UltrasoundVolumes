@@ -35,7 +35,7 @@ namespace UnityVolumeRendering
 
         private void Update()
         {
-            var angles = volume.transform.eulerAngles;
+            var angles = volume.transform.rotation.eulerAngles;
             if (MainAxis == 0)
             {
                 transform.rotation = Quaternion.Euler(angles.x, angles.y, 0);
