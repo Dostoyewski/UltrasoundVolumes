@@ -130,9 +130,14 @@ namespace UnityVolumeRendering
                 var target = GameObject.FindObjectOfType<VolumeRenderedObject>();
                 spots.targetObject = target;
             }
-            if (GUILayout.Button("Путь выходного файла"))
+            // if (GUILayout.Button("Путь выходного файла"))
+            // {
+            //     RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRobotPathResult);
+            // }
+            if (GUILayout.Button("Сброс положения"))
             {
-                RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRobotPathResult);
+                var controller = GameObject.FindObjectOfType<TransformController>();
+                controller.ResetOrientation();
             }
             if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Фиксация верт. оси"))
             {

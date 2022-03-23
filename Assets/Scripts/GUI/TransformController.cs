@@ -43,6 +43,13 @@ namespace UnityVolumeRendering
         private bool once = true;
         private int counter = 0;
 
+        public void ResetOrientation()
+        {
+            once = true;
+            targetRotation = Quaternion.Euler(90, 0, 0);
+            transform.rotation = targetRotation;
+        }
+
         protected void Start () {
             cam = Camera.main;
             targetCamPosition = cam.transform.position;
@@ -247,7 +254,6 @@ namespace UnityVolumeRendering
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, dt * rotateDelta);
         }
         
-
     }
 
 }
