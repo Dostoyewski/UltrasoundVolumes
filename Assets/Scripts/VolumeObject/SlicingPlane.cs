@@ -18,9 +18,11 @@ namespace UnityVolumeRendering
         public bool isRendering;
         private float prevAngleZ = 0;
         private VolumeRenderedObject volume = null;
+        Vector3 pos;
         
         private void Start()
         {
+            pos=transform.localPosition;
             isRendering = false;
             volume = GameObject.FindObjectOfType<VolumeRenderedObject>();
             spot = GameObject.FindObjectOfType<SpotCapsule>();
@@ -38,15 +40,20 @@ namespace UnityVolumeRendering
             var angles = volume.transform.rotation.eulerAngles;
             if (MainAxis == 0)
             {
-                transform.rotation = Quaternion.Euler(angles.x, angles.y, 0);
+                var quat=Quaternion.LookRotation(Vector3.forward, volume.transform.InverseTransformDirection(Vector3.forward));
+                transform.localRotation=quat;
+                transform.localPosition=quat*pos;
             }
             else if (MainAxis == 1 && spot.GetMode())
             {
                 transform.position = new Vector3(0, (float) -spot.GetCurrentLevel() / 10, 0);
+                //transform.localPosition=pos;
             }
             else if (MainAxis == 2)
             {
-                transform.rotation = Quaternion.Euler(angles.x, angles.y, 90);
+                var quat=Quaternion.LookRotation(Vector3.forward, volume.transform.InverseTransformDirection(Vector3.right));
+                transform.localRotation=quat;
+                transform.localPosition=quat*pos;
             }
             meshRenderer.sharedMaterial.SetMatrix("_parentInverseMat", transform.parent.worldToLocalMatrix);
             meshRenderer.sharedMaterial.SetMatrix("_planeMat", Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one)); // TODO: allow changing scale
@@ -84,23 +91,23 @@ namespace UnityVolumeRendering
                     Vector2 mouseOffset = (Event.current.mousePosition - prevMousePos) / new Vector2(bgRects[MainAxis].width, bgRects[MainAxis].height);
                     if (Mathf.Abs(mouseOffset.y) > 0.00001f)
                     {
-                        transform.Translate(Vector3.up * mouseOffset.y);
-                            
+                        //transform.Translate(Vector3.up * mouseOffset.y);
+                        pos+= Vector3.up * mouseOffset.y;
                         prevMousePos = Event.current.mousePosition;
                     }
 
                     if (Event.current.type == EventType.MouseUp)
                     {
                         handleMouseMovement = false;
-                        this.GetComponent<MeshRenderer>().enabled = false;
+                        //this.GetComponent<MeshRenderer>().enabled = false;
                         controller.EnableRotation();
                     }
                 }
 
                 if (Math.Abs(angles.z - prevAngleZ) > 2)
                 {
-                    prevAngleZ = angles.z;
-                    transform.position = Vector3.zero;
+                    //prevAngleZ = angles.z;
+                    //transform.position = Vector3.zero;
                 }
                 /*if (Event.current.type == EventType.MouseDrag && Event.current.button == 0)
                 {
