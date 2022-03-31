@@ -22,17 +22,15 @@ namespace UnityVolumeRendering
         
         private void Start()
         {
-            pos=transform.localPosition;
+            pos = transform.localPosition;
             isRendering = false;
             volume = GameObject.FindObjectOfType<VolumeRenderedObject>();
             spot = GameObject.FindObjectOfType<SpotCapsule>();
             meshRenderer = GetComponent<MeshRenderer>();
-            //bgRect = new Rect(0.0f, Screen.height/2, Screen.width/2, Screen.height/2);
             for (int i = 0; i < 3; i++)
             {
                 bgRects[i] = new Rect(coord4rects[i,0], coord4rects[i,1], Screen.width/2, Screen.height/2);
             }
-            //AxisScales={transform.parent.lossyScale};
         }
 
         private void Update()
@@ -40,20 +38,19 @@ namespace UnityVolumeRendering
             var angles = volume.transform.rotation.eulerAngles;
             if (MainAxis == 0)
             {
-                var quat=Quaternion.LookRotation(Vector3.forward, volume.transform.InverseTransformDirection(Vector3.forward));
-                transform.localRotation=quat;
-                transform.localPosition=quat*pos;
+                var quat = Quaternion.LookRotation(Vector3.forward, volume.transform.InverseTransformDirection(Vector3.forward));
+                transform.localRotation = quat;
+                transform.localPosition = quat * pos;
             }
             else if (MainAxis == 1 && spot.GetMode())
             {
                 transform.position = new Vector3(0, (float) -spot.GetCurrentLevel() / 10, 0);
-                //transform.localPosition=pos;
             }
             else if (MainAxis == 2)
             {
-                var quat=Quaternion.LookRotation(Vector3.forward, volume.transform.InverseTransformDirection(Vector3.right));
-                transform.localRotation=quat;
-                transform.localPosition=quat*pos;
+                var quat = Quaternion.LookRotation(Vector3.forward, volume.transform.InverseTransformDirection(Vector3.right));
+                transform.localRotation = quat;
+                transform.localPosition = quat*pos;
             }
             meshRenderer.sharedMaterial.SetMatrix("_parentInverseMat", transform.parent.worldToLocalMatrix);
             meshRenderer.sharedMaterial.SetMatrix("_planeMat", Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one)); // TODO: allow changing scale
@@ -81,7 +78,6 @@ namespace UnityVolumeRendering
                 {
                     handleMouseMovement = true;
                     prevMousePos = Event.current.mousePosition;
-                    // this.GetComponent<MeshRenderer>().enabled = true;
                     controller.DisableRotation();
                 }
 
@@ -91,7 +87,6 @@ namespace UnityVolumeRendering
                     Vector2 mouseOffset = (Event.current.mousePosition - prevMousePos) / new Vector2(bgRects[MainAxis].width, bgRects[MainAxis].height);
                     if (Mathf.Abs(mouseOffset.y) > 0.00001f)
                     {
-                        //transform.Translate(Vector3.up * mouseOffset.y);
                         pos+= Vector3.up * mouseOffset.y;
                         prevMousePos = Event.current.mousePosition;
                     }
@@ -99,7 +94,6 @@ namespace UnityVolumeRendering
                     if (Event.current.type == EventType.MouseUp)
                     {
                         handleMouseMovement = false;
-                        //this.GetComponent<MeshRenderer>().enabled = false;
                         controller.EnableRotation();
                     }
                 }
