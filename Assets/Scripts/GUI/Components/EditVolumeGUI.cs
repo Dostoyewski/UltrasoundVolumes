@@ -13,7 +13,7 @@ namespace UnityVolumeRendering
         private Rect windowRect = new Rect(150, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         private const int WINDOW_WIDTH = 400;
-        private const int WINDOW_HEIGHT = 250;
+        private const int WINDOW_HEIGHT = 150;
 
         private int selectedRenderModeIndex = 0;
         private Vector3 rotation;
@@ -50,18 +50,18 @@ namespace UnityVolumeRendering
 
         private void UpdateWindow(int windowID)
         {
-            GUI.DragWindow(new Rect(0, 0, 10000, 20));
+            GUI.DragWindow(new Rect(0, 100, 10000, 20));
             GUILayout.BeginVertical();
 
             if(targetObject != null)
             {
                 // Render mode
-                GUILayout.Label("Render mode");
-                selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Direct volume rendering", "Maximum intensity projection", "Isosurface rendering" }, 2);
-                targetObject.SetRenderMode((RenderMode)selectedRenderModeIndex);
+                // GUILayout.Label("Render mode");
+                // selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Direct volume rendering", "Maximum intensity projection", "Isosurface rendering" }, 2);
+                // targetObject.SetRenderMode((RenderMode)selectedRenderModeIndex);
 
                 // Visibility window
-                GUILayout.Label("Visibility window (min - max visible values)");
+                GUILayout.Label("Настройка прозрачности объекта");
                 GUILayout.BeginHorizontal();
                 Vector2 visibilityWindow = targetObject.GetVisibilityWindow();
                 GUILayout.Label("min:");
@@ -78,23 +78,23 @@ namespace UnityVolumeRendering
                 // rotation.z = GUILayout.HorizontalSlider(rotation.z, 0.0f, 360.0f);
                 // targetObject.transform.rotation = Quaternion.Euler(rotation);
                 
-                if(GUILayout.Button("Build transfer function", GUILayout.Width(200.0f)))
-                {
-                    TransferFunction tf = TransferFunctionDatabase.CreateTransferFunction();
-                    targetObject.transferFunction = tf;
-                }
-                
-                if(GUILayout.Button("Load default transfer function", GUILayout.Width(200.0f)))
-                {
-                    TransferFunction tf = TransferFunctionDatabase.CreateDefaultTransferFunction();
-                    targetObject.transferFunction = tf;
-                }
-
-                // Load transfer function
-                if(GUILayout.Button("Load transfer function", GUILayout.Width(200.0f)))
-                {
-                    RuntimeFileBrowser.ShowOpenFileDialog(OnLoadTransferFunction);
-                }
+                // if(GUILayout.Button("Build transfer function", GUILayout.Width(200.0f)))
+                // {
+                //     TransferFunction tf = TransferFunctionDatabase.CreateTransferFunction();
+                //     targetObject.transferFunction = tf;
+                // }
+                //
+                // if(GUILayout.Button("Load default transfer function", GUILayout.Width(200.0f)))
+                // {
+                //     TransferFunction tf = TransferFunctionDatabase.CreateDefaultTransferFunction();
+                //     targetObject.transferFunction = tf;
+                // }
+                //
+                // // Load transfer function
+                // if(GUILayout.Button("Load transfer function", GUILayout.Width(200.0f)))
+                // {
+                //     RuntimeFileBrowser.ShowOpenFileDialog(OnLoadTransferFunction);
+                // }
             }
 
             GUILayout.FlexibleSpace();

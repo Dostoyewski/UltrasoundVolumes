@@ -13,7 +13,7 @@ namespace UnityVolumeRendering
 
         private Rect windowRect = new Rect(150, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        private const int WINDOW_WIDTH = 400;
+        private const int WINDOW_WIDTH = 500;
         private const int WINDOW_HEIGHT = 250;
         private bool ablation = false;
 
@@ -52,7 +52,7 @@ namespace UnityVolumeRendering
 
         private void UpdateWindow(int windowID)
         {
-            GUI.DragWindow(new Rect(0, 0, 10000, 20));
+            GUI.DragWindow(new Rect(0, 0, 15000, 20));
             GUILayout.BeginVertical();
 
             if(targetObject != null)
@@ -78,7 +78,7 @@ namespace UnityVolumeRendering
                     targetObject.NextLevel();
                 }
 
-                GUILayout.Label("Current level: ");
+                GUILayout.Label("Текущий уровень: ");
                 GUILayout.Label(targetObject.GetCurrentLevel().ToString());
                 GUILayout.EndHorizontal();
                 
@@ -106,6 +106,16 @@ namespace UnityVolumeRendering
             if (GUILayout.Button("Закрыть"))
             {
                 instance.Close();
+            }
+            if (GUILayout.Button("Включить селектор"))
+            {
+                var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
+                objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                objects.transform.position = new Vector3(0f, 0f, 0f);
+                var spot = GameObject.FindObjectOfType<SpotCapsule>();
+                spot.SetActive(true);
+                spot.transform.SetParent(objects.transform);
+                spot.transform.Rotate(0, 0, 90);
             }
             if (GUILayout.Button("Отключить селектор"))
             {

@@ -30,11 +30,11 @@ namespace UnityVolumeRendering
         {
             GUILayout.BeginHorizontal();
             
-			if (GameObject.FindObjectOfType<VolumeRenderedObject>() == null && GUILayout.Button("Загрузить радиальную секвенцию"))
-            {
-                RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRadialSequenceResult);
-            }
-            if (GameObject.FindObjectOfType<VolumeRenderedObject>() == null && GUILayout.Button("Загрузить линейную секвенцию"))
+			// if (GameObject.FindObjectOfType<VolumeRenderedObject>() == null && GUILayout.Button("Загрузить радиальную секвенцию"))
+   //          {
+   //              RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRadialSequenceResult);
+   //          }
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() == null && GUILayout.Button("Загрузить секвенцию"))
             {
                 RuntimeFileBrowser.ShowOpenDirectoryDialog(OnLinearSequenceResult);
             }
@@ -108,20 +108,20 @@ namespace UnityVolumeRendering
                     item.isRendering = !item.isRendering;
                 }
             }
-            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Выбрать споты") )
-            {
-                var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
-                objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                objects.transform.position = new Vector3(0f, 0f, 0f);
-                var spot = GameObject.FindObjectOfType<SpotCapsule>();
-                spot.SetActive(true);
-                spot.transform.SetParent(objects.transform);
-                spot.transform.Rotate(0, 0, 90);
-                isSelectingSpotes = true;
-
-                var r1 = spot.GetMeshSize();
-            }
-            if (isSelectingSpotes && GUILayout.Button("Настройки выбора спотов"))
+            // if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Выбрать споты") )
+            // {
+            //     var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
+            //     objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            //     objects.transform.position = new Vector3(0f, 0f, 0f);
+            //     var spot = GameObject.FindObjectOfType<SpotCapsule>();
+            //     spot.SetActive(true);
+            //     spot.transform.SetParent(objects.transform);
+            //     spot.transform.Rotate(0, 0, 90);
+            //     isSelectingSpotes = true;
+            //
+            //     var r1 = spot.GetMeshSize();
+            // }
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Настройки выбора спотов"))
             {
                 var spots = GameObject.FindObjectOfType<SpotCapsule>();
                 EditSpotsGUI.ShowWindow(spots);
@@ -134,7 +134,7 @@ namespace UnityVolumeRendering
             // {
             //     RuntimeFileBrowser.ShowOpenDirectoryDialog(OnRobotPathResult);
             // }
-            if (GUILayout.Button("Сброс положения"))
+            if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Сброс положения"))
             {
                 var controller = GameObject.FindObjectOfType<TransformController>();
                 controller.ResetOrientation();
