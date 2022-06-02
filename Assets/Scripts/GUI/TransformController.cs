@@ -112,13 +112,13 @@ namespace UnityVolumeRendering
                 if (currentDir == 0)
                 {
                     plane.transform.localRotation = Quaternion.Euler(rotAngle, 90, 0);
-                    Debug.Log(Mathf.Cos((rotAngle - 90) * Mathf.PI / 180));
                     plane.transform.localPosition = new Vector3(-posY * Mathf.Cos(rotAngle * Mathf.PI / 180),
                         posY * Mathf.Sin(rotAngle * Mathf.PI / 180), 0);
                 }
                 else if (currentDir == 1)
                 {
                     plane.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                    plane.transform.localPosition = new Vector3(0, 0, posY);
                 }
             }
         }
