@@ -49,6 +49,8 @@ namespace UnityVolumeRendering
             if ( GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Удалить обрезку") )
             {
                 this.DespawnBoxes();
+                var controller = GameObject.FindObjectOfType<TransformController>();
+                controller.ResetPosAndScale();
             }
             
             if (GameObject.FindObjectOfType<CrossSectionPlane>() != null && GUILayout.Button("Удалить скальпель") )

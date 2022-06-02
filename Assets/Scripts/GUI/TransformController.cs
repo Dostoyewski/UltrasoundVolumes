@@ -50,6 +50,16 @@ namespace UnityVolumeRendering
             transform.rotation = targetRotation;
         }
 
+        public void ResetPosAndScale()
+        {
+            posX = 0f;
+            posY = 0f;
+            posZ = 0f;
+            scaleX = 1f;
+            scaleY = 1f;
+            scaleZ = 1f;
+        }
+
         protected void Start () {
             cam = Camera.main;
             targetCamPosition = cam.transform.position;
