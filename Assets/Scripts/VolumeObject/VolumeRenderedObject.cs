@@ -21,7 +21,7 @@ namespace UnityVolumeRendering
         private RenderMode renderMode;
         private TFRenderMode tfRenderMode;
         private bool lightingEnabled;
-        private Vector3[] angles4Planes={new Vector3(0f,0f,0f),new Vector3(90.0f,0f,0f),new Vector3(90.0f,0f,-90.0f)};
+        private Vector3[] angles4Planes={new Vector3(0f,0f,0f), new Vector3(90.0f,0f,0f), new Vector3(90.0f,0f,-90.0f)};
 
         private Vector2 visibilityWindow = new Vector2(0.0f, 1.0f);
 

@@ -27,7 +27,7 @@ namespace UnityVolumeRendering
         private float posX = 0f;
         private float posY = 0f;
         private float posZ = 0f;
-        private float scaleStep = 0.0007f;
+        private float scaleStep = 0.15f;
         
         private float moveStep = 0.7f;
         private float currentDir = 0f;

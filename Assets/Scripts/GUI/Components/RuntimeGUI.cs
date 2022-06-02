@@ -46,10 +46,10 @@ namespace UnityVolumeRendering
                 this.DespawnBoxes();
             }
             
-            // if ( GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Despawn cutout Box") )
-            // {
-            //     this.DespawnBoxes();
-            // }
+            if ( GameObject.FindObjectOfType<CutoutBox>() != null && GUILayout.Button("Удалить обрезку") )
+            {
+                this.DespawnBoxes();
+            }
             
             if (GameObject.FindObjectOfType<CrossSectionPlane>() != null && GUILayout.Button("Удалить скальпель") )
             {
@@ -69,14 +69,14 @@ namespace UnityVolumeRendering
                 scalpel = true;
             }
 
-            // if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Cutout Box") )
-            // {
-                // var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
-                // VolumeObjectFactory.SpawnCutoutBox(objects);
-				// objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                // var box = GameObject.FindObjectOfType<CutoutBox>();
-                // box.transform.SetParent(objects.transform);
-            // }
+            if (GameObject.FindObjectOfType<CutoutBox>() == null && GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Обрезка") )
+            {
+                var objects = GameObject.FindObjectOfType<VolumeRenderedObject>();
+                VolumeObjectFactory.SpawnCutoutBox(objects);
+				objects.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                var box = GameObject.FindObjectOfType<CutoutBox>();
+                box.transform.SetParent(objects.transform);
+            }
 
             // Show button for opening the dataset editor (for changing the visualisation)
             if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Редактировать скан"))
