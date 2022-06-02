@@ -108,18 +108,15 @@ namespace UnityVolumeRendering
             }
             else if (plane != null)
             {
-                plane.transform.localPosition = new Vector3(posX, posY, posZ);
                 plane.transform.localScale = new Vector3(1, 1, 1);
                 if (currentDir == 0)
                 {
-                    plane.transform.localRotation = Quaternion.Euler(90, 0, 0);
-                    rotAngle = 0;
+                    plane.transform.localRotation = Quaternion.Euler(rotAngle, 90, 0);
+                    Debug.Log(Mathf.Cos((rotAngle - 90) * Mathf.PI / 180));
+                    plane.transform.localPosition = new Vector3(-posY * Mathf.Cos(rotAngle * Mathf.PI / 180),
+                        posY * Mathf.Sin(rotAngle * Mathf.PI / 180), 0);
                 }
                 else if (currentDir == 1)
-                {
-                    plane.transform.localRotation = Quaternion.Euler(rotAngle, 90, 0);
-                }
-                else if (currentDir == 2)
                 {
                     plane.transform.localRotation = Quaternion.Euler(0, 0, 90);
                 }
@@ -156,7 +153,7 @@ namespace UnityVolumeRendering
 
             if (Input.GetKeyUp(KeyCode.R))
             {
-                if (currentDir == 2)
+                if (currentDir == 1)
                 {
                     currentDir = 0;
                 }
@@ -165,7 +162,14 @@ namespace UnityVolumeRendering
 
             if (Input.GetKey(KeyCode.Tab))
             {
-                rotAngle += (float) (15 * dt);
+                if (rotAngle > 360)
+                {
+                    rotAngle = 0;
+                }
+                else
+                {
+                    rotAngle += (float) (30 * dt);
+                }
             }
         }
 
