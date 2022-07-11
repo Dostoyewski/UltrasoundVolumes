@@ -8,6 +8,8 @@
         _TFTex("Transfer Function Texture (Generated)", 2D) = "" {}
         _MinVal("Min val", Range(0.0, 1.0)) = 0.0
         _MaxVal("Max val", Range(0.0, 1.0)) = 1.0
+        _SigCut("Sigmoid Cut", Range(0.0, 2.0)) = 0.0
+        _SigSlope("Sigmoid Slope", Range(10.0, 80.0)) = 60.0
     }
     SubShader
     {
@@ -32,6 +34,7 @@
             #include "UnityCG.cginc"
 
             #define CUTOUT_ON CUTOUT_PLANE || CUTOUT_BOX_INCL || CUTOUT_BOX_EXCL
+            //#define Enat 2.7182;
 
             struct vert_in
             {
@@ -63,11 +66,25 @@
 
             float _MinVal;
             float _MaxVal;
+            float _SigCut;
+            float _SigSlope;
 
 #if CUTOUT_ON
             float4x4 _CrossSectionMatrix;
 #endif
 
+            float getModAlpha(float range)
+            {
+                float Enat=2.7182;
+                if(range<1)
+                    return (( pow(Enat , range) - 1)/(Enat-1));
+                return 1.0;
+            }
+            float sigmoidMod(float range)
+            {
+                float Enat=2.7182;
+                return 1/(1+pow(Enat , -_SigSlope*(range-_SigCut)));
+            }
             // Gets the colour from a 1D Transfer Function (x = density)
             float4 getTF1DColour(float density)
             {
@@ -197,6 +214,10 @@
 #ifdef LIGHTING_ON
                     src.rgb = calculateLighting(src.rgb, normalize(gradient), lightDir, rayDir, 0.3f);
 #endif
+
+                    //src.a=src.a*(getModAlpha(t));
+                    //src.a = src.a*(1-sigmoidMod(t));
+                    src.a = src.a*(1-sigmoidMod(localToDepth(rayStartPos + rayDir * t - float3(0.5f, 0.5f, 0.5f))));  
 
                     if (density < _MinVal || density > _MaxVal)
                         src.a = 0.0f;

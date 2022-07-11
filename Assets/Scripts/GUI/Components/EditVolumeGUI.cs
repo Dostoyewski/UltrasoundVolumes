@@ -13,7 +13,7 @@ namespace UnityVolumeRendering
         private Rect windowRect = new Rect(150, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         private const int WINDOW_WIDTH = 400;
-        private const int WINDOW_HEIGHT = 150;
+        private const int WINDOW_HEIGHT = 200;
 
         private int selectedRenderModeIndex = 0;
         private Vector3 rotation;
@@ -56,9 +56,9 @@ namespace UnityVolumeRendering
             if(targetObject != null)
             {
                 // Render mode
-                // GUILayout.Label("Render mode");
-                // selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Direct volume rendering", "Maximum intensity projection", "Isosurface rendering" }, 2);
-                // targetObject.SetRenderMode((RenderMode)selectedRenderModeIndex);
+                GUILayout.Label("Render mode");
+                selectedRenderModeIndex = GUILayout.SelectionGrid(selectedRenderModeIndex, new string[] { "Direct volume rendering", "Maximum intensity projection", "Isosurface rendering" }, 2);
+                targetObject.SetRenderMode((RenderMode)selectedRenderModeIndex);
 
                 // Visibility window
                 GUILayout.Label("Настройка прозрачности объекта");

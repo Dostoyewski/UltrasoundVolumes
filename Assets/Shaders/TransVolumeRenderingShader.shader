@@ -66,8 +66,8 @@ Shader "VolumeRendering/DirectVolumeRenderingShader"
 
             float _MinVal;
             float _MaxVal;
-            float _SigCut;
-            float _SigSlope;
+            float _SigCut = 0;
+            float _SigSlope = 1000;
 
 #if CUTOUT_ON
             float4x4 _CrossSectionMatrix;
