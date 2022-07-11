@@ -8,8 +8,8 @@
         _TFTex("Transfer Function Texture (Generated)", 2D) = "" {}
         _MinVal("Min val", Range(0.0, 1.0)) = 0.0
         _MaxVal("Max val", Range(0.0, 1.0)) = 1.0
-        _SigCut("Sigmoid Cut", Range(0.0, 2.0)) = 0.0
-        _SigSlope("Sigmoid Slope", Range(10.0, 80.0)) = 60.0
+        _SigCut("Sigmoid Cut", Range(0.0, 2.0)) = 2.0
+        _SigSlope("Sigmoid Slope", Range(10.0, 80.0)) = 10.0
     }
     SubShader
     {

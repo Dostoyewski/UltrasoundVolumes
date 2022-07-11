@@ -70,6 +70,16 @@ namespace UnityVolumeRendering
                 visibilityWindow.y = GUILayout.HorizontalSlider(visibilityWindow.y, visibilityWindow.x, 1.0f, GUILayout.Width(150.0f));
                 targetObject.SetVisibilityWindow(visibilityWindow);
                 GUILayout.EndHorizontal();
+                
+                // Visibility window
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Cut:");
+                var cut = GUILayout.HorizontalSlider(targetObject.meshRenderer.sharedMaterial.GetFloat("_SigCut"), 0.0f, 2.0f, GUILayout.Width(150.0f));
+                GUILayout.Label("Slope:");
+                var slope = GUILayout.HorizontalSlider(targetObject.meshRenderer.sharedMaterial.GetFloat("_SigSlope"), 10.0f, 80.0f, GUILayout.Width(150.0f));
+                targetObject.meshRenderer.sharedMaterial.SetFloat("_SigCut", cut);
+                targetObject.meshRenderer.sharedMaterial.SetFloat("_SigSlope", slope);
+                GUILayout.EndHorizontal();
 
                 // // Rotation
                 // GUILayout.Label("Rotation");
