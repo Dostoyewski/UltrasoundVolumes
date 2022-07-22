@@ -83,6 +83,8 @@ namespace UnityVolumeRendering
             // Show button for opening the dataset editor (for changing the visualisation)
             if (GameObject.FindObjectOfType<VolumeRenderedObject>() != null && GUILayout.Button("Редактировать скан"))
             {
+                var transCont = GameObject.FindObjectOfType<TransformController>();
+                transCont.DisableRotation();
                 EditVolumeGUI.ShowWindow(GameObject.FindObjectOfType<VolumeRenderedObject>());
                 isEditingDataset = true;
             }

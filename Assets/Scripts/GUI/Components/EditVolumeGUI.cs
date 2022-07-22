@@ -117,6 +117,8 @@ namespace UnityVolumeRendering
                 GameObject.Destroy(this.gameObject);
                 var rGui = GameObject.FindObjectOfType<RuntimeGUI>();
                 rGui.isEditingDataset = false;
+                var transCont = GameObject.FindObjectOfType<TransformController>();
+                transCont.EnableRotation();
             }
             GUILayout.EndHorizontal();
 
