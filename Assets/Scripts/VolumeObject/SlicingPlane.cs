@@ -42,9 +42,18 @@ namespace UnityVolumeRendering
                 transform.localRotation = quat;
                 transform.localPosition = quat * pos;
             }
-            else if (MainAxis == 1 && spot.GetMode())
+            else if (MainAxis == 1)
             {
-                transform.position = new Vector3(0, (float) -spot.GetCurrentLevel() / 10, 0);
+                if (spot.GetMode())
+                {
+                    transform.position = new Vector3(0, (float) -spot.GetCurrentLevel() / 10, 0);
+                }
+                else
+                {
+                    var quat = Quaternion.LookRotation(Vector3.up, volume.transform.InverseTransformDirection(Vector3.up));
+                    transform.localRotation = quat;
+                    transform.localPosition = quat*pos;
+                }
             }
             else if (MainAxis == 2)
             {
